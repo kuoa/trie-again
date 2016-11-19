@@ -3,77 +3,76 @@ package datastructures;
 import interfaces.ITrie;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
-import java.util.Hashtable;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
 
 public class PatriciaTrie implements ITrie {
-	Hashtable<Character, Tuple<String, PatriciaTrie>> data;	
-	
-	public final static Character epsilon = '#';
-	
-	public PatriciaTrie() {
-		data = new Hashtable<>();
-	}
+    Hashtable<Character, Tuple<String, PatriciaTrie>> data;
 
-	@Override
-	public void insert(String _word) {
-		
-		if(_word.isEmpty()){
-			return;
-		}
+    public final static Character epsilon = '#';
+
+    public PatriciaTrie() {
+        data = new Hashtable<>();
+    }
+
+    @Override
+    public void insert(String _word) {
+
+        if(_word.isEmpty()){
+            return;
+        }
 
         String word = _word.endsWith(epsilon.toString()) ? _word : _word + epsilon;
-		Character key = word.charAt(0);
-				
-		if(data.containsKey(key)){
+        Character key = word.charAt(0);
+
+        if(data.containsKey(key)){
             /* key is present */
-			Tuple<String, PatriciaTrie> value = data.get(key);
-			PatriciaTrie child = value.child;
-			String prefix = value.prefix;
+            Tuple<String, PatriciaTrie> value = data.get(key);
+            PatriciaTrie child = value.child;
+            String prefix = value.prefix;
 
             /* word is present */
             if(word.equals(prefix)){
                 return;
             }
 
-			int commonPrefixIndex = getCommonPrefixIndex(word, prefix);
-			String commonPrefix = prefix.substring(0, commonPrefixIndex);
+            int commonPrefixIndex = getCommonPrefixIndex(word, prefix);
+            String commonPrefix = prefix.substring(0, commonPrefixIndex);
 
             /* prefix of same length, insert in children */
-			if(commonPrefix.length() == prefix.length()){
-				String suffix = word.substring(commonPrefixIndex);
+            if(commonPrefix.length() == prefix.length()){
+                String suffix = word.substring(commonPrefixIndex);
                 child.insert(suffix);
 
-			}else{
+            }else{
                 PatriciaTrie newSon = new PatriciaTrie();
 
                 /* uncommon part */
-				String oldRest = prefix.substring(commonPrefixIndex);
+                String oldRest = prefix.substring(commonPrefixIndex);
 
                 /* insert uncommon part and his child */
-				Tuple<String, PatriciaTrie> oldChildTuple = new Tuple<>(oldRest, child);
-				newSon.data.put(oldRest.charAt(0), oldChildTuple);
+                Tuple<String, PatriciaTrie> oldChildTuple = new Tuple<>(oldRest, child);
+                newSon.data.put(oldRest.charAt(0), oldChildTuple);
 
                 /* insert new word */
-				String newRest = word.substring(commonPrefixIndex);
-				Tuple<String, PatriciaTrie> newChildTuple = new Tuple<>(newRest, null);
-				newSon.data.put(newRest.charAt(0), newChildTuple);
+                String newRest = word.substring(commonPrefixIndex);
+                Tuple<String, PatriciaTrie> newChildTuple = new Tuple<>(newRest, null);
+                newSon.data.put(newRest.charAt(0), newChildTuple);
 
                 /* new tree */
-				Tuple<String, PatriciaTrie> newNode = new Tuple<>(commonPrefix, newSon);
-				data.put(commonPrefix.charAt(0), newNode);
-			}
-		}
-		else{
+                Tuple<String, PatriciaTrie> newNode = new Tuple<>(commonPrefix, newSon);
+                data.put(commonPrefix.charAt(0), newNode);
+            }
+        }
+        else{
 			/* key is not present */
-			Tuple<String, PatriciaTrie> value = new Tuple<>(word, null);
-			data.put(key, value);			
-		}
-	}
+            Tuple<String, PatriciaTrie> value = new Tuple<>(word, null);
+            data.put(key, value);
+        }
+    }
 
-	@Override
-	public void remove(String _word) {
+    @Override
+    public void remove(String _word) {
 
         if(_word.isEmpty()){
             return;
@@ -120,10 +119,10 @@ public class PatriciaTrie implements ITrie {
             /* word not found */
         }
 
-	}
+    }
 
-	@Override
-	public boolean lookup(String _word) {
+    @Override
+    public boolean lookup(String _word) {
 
         if(_word.isEmpty()){
             return false;
@@ -155,81 +154,197 @@ public class PatriciaTrie implements ITrie {
 
         /* word not found */
         return false;
-	}
+    }
 
-	@Override
-	public int count() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public int count() {
 
-	@Override
-	public List<String> listWords() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        int numberWords = 0;
 
-	@Override
-	public int nbNullPointer() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+        Stack<PatriciaTrie> stack = new Stack<>();
+        stack.push(this);
 
-	@Override
-	public int height() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+        while(!stack.empty()){
+            PatriciaTrie trie = stack.pop();
 
-	@Override
-	public int avgDepth() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+            for(Entry<Character, Tuple<String, PatriciaTrie>> e : trie.data.entrySet()){
+                Tuple<String, PatriciaTrie> tuple = e.getValue();
 
-	@Override
-	public int nbPrefixed(String pref) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+                /* word found */ /* same as tuple.child == null */
+                if(tuple.prefix.endsWith(epsilon.toString())){
+                    numberWords++;
+                }
+                else{
+                    stack.push(tuple.child);
+                }
+            }
+        }
+        return numberWords;
+    }
 
-	@Override
-	public ITrie merge(ITrie trie) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public List<String> listWords() {
+        List<String> listWords = new ArrayList<>();
 
-	@Override
-	public ITrie convert() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public String toString(){
-		String s = "(";
-		
-		for(Entry<Character, Tuple<String, PatriciaTrie>> e : data.entrySet()){
-			Tuple<String, PatriciaTrie> v = e.getValue();
-															
-			s += v.prefix + "[" + ((v.child == null) ? "<null>" : v.child.toString()) + "]";
-		}
-		
-		return s + ")";
-	}
-	
-	public static int getCommonPrefixIndex(String a, String b){
-		
-		int minLength = Math.min(a.length(), b.length());
-		int i;
-		
-		for(i = 0; i < minLength; i++){
-			if(a.charAt(i) != b.charAt(i)){
-				break;
-			}
-		}
-		
-		return i;			
-	}
+        listWordsRecursive(this, "", listWords);
 
+        /* since we are using a hashmap, there is no way to traverse the trie in alphabetical order */
+        /* we have no option but to sort */
+        Collections.sort(listWords);
+
+        return listWords;
+    }
+
+    private void listWordsRecursive(PatriciaTrie rootTrie, String rootWord, List<String> listWords){
+
+        for(Entry<Character, Tuple<String, PatriciaTrie>> e : rootTrie.data.entrySet()) {
+            Tuple<String, PatriciaTrie> tuple = e.getValue();
+            String prefix = tuple.prefix;
+
+            if(prefix.endsWith(epsilon.toString())){
+                /* word found | remove epsilon */
+                String wordFound = rootWord + (prefix.substring(0, prefix.length() - 1));
+                listWords.add(wordFound);
+            }else{
+                String newWord = rootWord + prefix;
+                listWordsRecursive(tuple.child, newWord, listWords);
+            }
+        }
+    }
+
+    @Override
+    public int nbNullPointer() {
+        int nullPointers = 0;
+
+        Stack<PatriciaTrie> stack = new Stack<>();
+        stack.push(this);
+
+        while(!stack.empty()){
+            PatriciaTrie trie = stack.pop();
+
+            for(Entry<Character, Tuple<String, PatriciaTrie>> e : trie.data.entrySet()){
+                Tuple<String, PatriciaTrie> tuple = e.getValue();
+
+                /* word found */ /* same as tuple.child == null */
+                if(tuple.child == null){
+                    nullPointers++;
+                }
+                else{
+                    stack.push(tuple.child);
+                }
+            }
+        }
+        return nullPointers;
+    }
+
+    @Override
+    public int height() {
+
+        int height = 0;
+
+        for(Entry<Character, Tuple<String, PatriciaTrie>> e : data.entrySet()) {
+            Tuple<String, PatriciaTrie> tuple = e.getValue();
+
+            if(tuple.child == null) continue;
+
+            int newHeight = tuple.child.height();
+
+            if(newHeight > height){
+                height = newHeight;
+            }
+        }
+
+        return 1 + height;
+    }
+
+    @Override
+    public int avgDepth() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public int nbPrefixed(String _word) {
+
+        if(_word.isEmpty()){
+            return 0;
+        }
+
+        String word = _word.endsWith(epsilon.toString()) ? _word : _word + epsilon;
+        Character key = word.charAt(0);
+
+        if(data.containsKey(key)) {
+            /* key is present */
+            Tuple<String, PatriciaTrie> value = data.get(key);
+            PatriciaTrie child = value.child;
+            String prefix = value.prefix;
+
+            /* word found */
+            if (word.equals(prefix)) {
+                return 1;
+            }
+
+            int commonPrefixIndex = getCommonPrefixIndex(word, prefix);
+
+            /* node found | count his children */
+            if(commonPrefixIndex == word.length() - 1){
+                return child.count();
+            }
+
+            String commonPrefix = prefix.substring(0, commonPrefixIndex);
+            /* prefix of same length, search in children */
+            if(commonPrefix.length() == prefix.length()) {
+                String suffix = word.substring(commonPrefixIndex);
+                return child.nbPrefixed(suffix);
+            }
+        }
+
+        /* word not found */
+        return 0;
+    }
+
+    @Override
+    public ITrie merge(ITrie trie) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public ITrie convert() {
+
+        HybridTrie hybridTrie = new HybridTrie();
+
+        for(String word : listWords()){
+            hybridTrie.insert(word);
+        }
+
+        return hybridTrie;
+    }
+
+    @Override
+    public String toString(){
+        String s = "(";
+
+        for(Entry<Character, Tuple<String, PatriciaTrie>> e : data.entrySet()){
+            Tuple<String, PatriciaTrie> v = e.getValue();
+
+            s += v.prefix + "[" + ((v.child == null) ? "<null>" : v.child.toString()) + "]";
+        }
+
+        return s + ")";
+    }
+
+    private int getCommonPrefixIndex(String a, String b){
+
+        int minLength = Math.min(a.length(), b.length());
+        int i;
+
+        for(i = 0; i < minLength; i++){
+            if(a.charAt(i) != b.charAt(i)){
+                break;
+            }
+        }
+
+        return i;
+    }
 }
