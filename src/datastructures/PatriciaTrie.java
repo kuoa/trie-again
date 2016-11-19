@@ -10,6 +10,7 @@ public class PatriciaTrie implements ITrie {
     Hashtable<Character, Tuple<String, PatriciaTrie>> data;
 
     public final static Character epsilon = '#';
+    private static Integer id = 0; /* used for drawing */
 
     public PatriciaTrie() {
         data = new Hashtable<>();
@@ -332,6 +333,33 @@ public class PatriciaTrie implements ITrie {
         }
 
         return s + ")";
+    }
+
+    @Override
+    public String draw(){
+        StringBuilder dotEntry = new StringBuilder();
+        dotEntry.append("digraph PatriciaTrie {\n");
+
+        drawRecursive(this, "<-RootNode->", dotEntry);
+
+        dotEntry.append("}\n");
+
+        return dotEntry.toString();
+    }
+
+    private void drawRecursive(PatriciaTrie rootTrie, String father, StringBuilder dotEntry){
+
+        for(Entry<Character, Tuple<String, PatriciaTrie>> e : rootTrie.data.entrySet()) {
+            Tuple<String, PatriciaTrie> tuple = e.getValue();
+            String prefix = tuple.prefix;
+
+            dotEntry.append("\t" + (++id) + " [label=\"" + prefix + "\"]\n");
+            dotEntry.append("\t" + father + " -> " + id + "\n");
+
+            if(tuple.child != null) {
+                drawRecursive(tuple.child, id.toString(), dotEntry);
+            }
+        }
     }
 
     private int getCommonPrefixIndex(String a, String b){

@@ -16,4 +16,7 @@ public interface ITrie {
 	
 	public ITrie merge(ITrie trie);
 	public ITrie convert();
+
+    /* DOT language */
+	public String draw();
 }

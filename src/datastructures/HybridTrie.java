@@ -75,4 +75,9 @@ public class HybridTrie implements ITrie {
 		return null;
 	}
 
+	@Override
+	public String draw() {
+		return null;
+	}
+
 }

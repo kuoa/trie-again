@@ -45,9 +45,11 @@ public class TestMain {
 
         System.out.println("prefixed by");
         System.out.println(trie.nbPrefixed("de"));
+        System.out.println(trie.draw());
+
+
 
         /*
-
 		//insertion
 		trie.insert("home");
 		trie.insert("homeless");
@@ -70,9 +72,11 @@ public class TestMain {
         }
 
         System.out.println(trie.nbPrefixed("ho"));
-        */
+        System.out.println(trie.draw());
 
 
+
+*/
         //remove
         /*
         trie.insert("bonjour");
