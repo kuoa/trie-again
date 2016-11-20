@@ -1,12 +1,44 @@
+import datastructures.HybridTrie;
 import datastructures.PatriciaTrie;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.util.List;
 
 
 public class TestMain {
-
 	public static void main(String[] args) {
+		final String[] words2 = new String[]{
+                "A", "quel", "genial", "professeur", "de", "dactylographie", "sommes", "nous", "redevables", "de",
+                "la", "superbe", "phrase", "ci", "dessus", ",", "un", "modele", "du", "genre", ",", "que", "toute",
+                "dactylo", "connait", "par", "coeur", "puisque", "elle", "fait", "appel", "a", "chaqune", "des",
+                "touches", "du", "clavier", "de", "la", "machine", "a", "ecrire", "?" };
+		final String[] words = new String[]{
+				"bonjour", "banane", "atome", "at"
+		};
+		
+		HybridTrie ht = new HybridTrie();
+		for(String w : words) {
+			ht.insert(w);
+		}
+		
+//		System.out.println(ht.lookup("banen"));
+//		System.out.println(ht.lookup("banane"));
+//		System.out.println(ht.lookup("at"));
+//		System.out.println(ht.lookup("ati"));
+//		System.out.println(ht.lookup("atome"));
+//		for(; ht != null; ht = ht.middle) {
+//			System.out.print(ht.letter);
+//		}
+//		System.out.println(ht.middle.middle.right.middle.middle.letter);
+		
+		System.out.println(ht.draw());
+		
+	}
+}
+
+
+class TestMainPT {
+
+	public static void main2(String[] args) {
 
         final String[] words = new String[]{
                 "A", "quel", "genial", "professeur", "de", "dactylographie", "sommes", "nous", "redevables", "de",
@@ -16,9 +48,6 @@ public class TestMain {
 
 
         PatriciaTrie trie = new PatriciaTrie();
-
-
-
 
         int count = 0, oldCount = count;
 
@@ -47,10 +76,6 @@ public class TestMain {
         System.out.println("prefixed by");
         System.out.println(trie.nbPrefixed("de"));
         System.out.println(trie.draw());
-        System.out.println("height " + trie.height());
-        System.out.println("avg depth " + trie.avgDepth());
-
-
 
 
 
@@ -69,6 +94,7 @@ public class TestMain {
         trie.insert("ho");
 		System.out.println(trie);
         System.out.println(trie.count());
+        System.out.println(trie.height());
 
         List<String> listWords = trie.listWords();
         for(String w : listWords){
@@ -77,8 +103,9 @@ public class TestMain {
 
         System.out.println(trie.nbPrefixed("ho"));
         System.out.println(trie.draw());
-        System.out.println("height " + trie.height());
-        System.out.println("avg depth " + trie.avgDepth());
+
+
+
 */
         //remove
         /*
