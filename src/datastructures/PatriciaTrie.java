@@ -11,6 +11,8 @@ public class PatriciaTrie implements ITrie {
 
     public final static Character epsilon = '#';
     private static Integer id = 0; /* used for drawing */
+    private final int DEPTH_SUM = 0; /* used for average depth */
+    private final int NULL_POINTERS_SUM = 1; /* used for average depth */
 
     public PatriciaTrie() {
         data = new Hashtable<>();
@@ -260,8 +262,28 @@ public class PatriciaTrie implements ITrie {
 
     @Override
     public int avgDepth() {
-        // TODO Auto-generated method stub
-        return 0;
+        int[] result = new int[2];
+
+        avgDepthRecur(this, 0, result);
+
+        return result[DEPTH_SUM] / result[NULL_POINTERS_SUM];
+    }
+
+    /* rez[DEPTH_SUM] = sum of depths | rez[NULL_POINTERS_SUM] = nb of null nodes */
+    private void avgDepthRecur(PatriciaTrie rootTrie, int fatherDepth, int[] result){
+
+        for(Entry<Character, Tuple<String, PatriciaTrie>> e : rootTrie.data.entrySet()) {
+            Tuple<String, PatriciaTrie> tuple = e.getValue();
+
+            if(tuple.child == null){
+                result[DEPTH_SUM] += fatherDepth + 1;
+                result[NULL_POINTERS_SUM]++;
+                continue;
+            }
+
+            avgDepthRecur(tuple.child, fatherDepth + 1, result);
+        }
+
     }
 
     @Override
@@ -351,9 +373,8 @@ public class PatriciaTrie implements ITrie {
 
         for(Entry<Character, Tuple<String, PatriciaTrie>> e : rootTrie.data.entrySet()) {
             Tuple<String, PatriciaTrie> tuple = e.getValue();
-            String prefix = tuple.prefix;
 
-            dotEntry.append("\t" + (++id) + " [label=\"" + prefix + "\"]\n");
+            dotEntry.append("\t" + (++id) + " [label=\"" + tuple.prefix + "\"]\n");
             dotEntry.append("\t" + father + " -> " + id + "\n");
 
             if(tuple.child != null) {

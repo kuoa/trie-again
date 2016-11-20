@@ -19,6 +19,7 @@ public class TestMain {
 
 
 
+
         int count = 0, oldCount = count;
 
         for(int i = 0; i < words.length; i++){
@@ -46,6 +47,10 @@ public class TestMain {
         System.out.println("prefixed by");
         System.out.println(trie.nbPrefixed("de"));
         System.out.println(trie.draw());
+        System.out.println("height " + trie.height());
+        System.out.println("avg depth " + trie.avgDepth());
+
+
 
 
 
@@ -64,7 +69,6 @@ public class TestMain {
         trie.insert("ho");
 		System.out.println(trie);
         System.out.println(trie.count());
-        System.out.println(trie.height());
 
         List<String> listWords = trie.listWords();
         for(String w : listWords){
@@ -73,9 +77,8 @@ public class TestMain {
 
         System.out.println(trie.nbPrefixed("ho"));
         System.out.println(trie.draw());
-
-
-
+        System.out.println("height " + trie.height());
+        System.out.println("avg depth " + trie.avgDepth());
 */
         //remove
         /*
