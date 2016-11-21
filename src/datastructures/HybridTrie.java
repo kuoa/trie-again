@@ -2,20 +2,22 @@ package datastructures;
 
 import interfaces.ITrie;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class HybridTrie implements ITrie {
 	
 	public HybridTrie left, right, middle;
 	public char letter;
 	
-	private boolean isNull;
+	private boolean isNull, isEnd;
 	
 	private static int _did = 0; /* used for draw() */
+	private static int _depthsSum, _nbLeaves;
 		
 	public HybridTrie() {
 		isNull = true;
+		isEnd = false;
 	}
 	
 	public static HybridTrie nullHT() {
@@ -29,28 +31,34 @@ public class HybridTrie implements ITrie {
 		middle = nullHT();
 		right = nullHT();
 	}
-
-	public void insert(String word) {
-		_insert(word+"#");
-	}
 	
-	private void _insert(String word) {
+	public void nullify() {
+		isNull = true;
+		left = null;
+		right = null;
+		middle = null;
+	}
+
+	@Override	
+	public void insert(String word) {
 		if(word.isEmpty()) return;
 		
 		char l = word.charAt(0);
 		if(isNull) {
 			set(l);
-			middle._insert(word.substring(1));
+			if(word.length() == 1) isEnd = true;
+			middle.insert(word.substring(1));
 			return;
 		}
 		
 		if(l < letter) {
-			left._insert(word);
+			left.insert(word);
 		}
 		else if(l > letter) {
-			right._insert(word);
+			right.insert(word);
 		} else {
-			middle._insert(word.substring(1));
+			if(word.length() == 1) isEnd = true;
+			middle.insert(word.substring(1));
 		}
 				
 		
@@ -58,67 +66,146 @@ public class HybridTrie implements ITrie {
 
 	@Override
 	public void remove(String word) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public boolean lookup(String word) {
-		return _lookup(word+"#");
+		_remove(word);
 	}
 	
-	public boolean _lookup(String word) {
-		if(isNull) return false;
-		
-		if(word.isEmpty())
-			return true;
+	private boolean _remove(String word) { /* returns true if children was nullified */
+		if(isNull || word.isEmpty()) return false;
 		
 		char l = word.charAt(0);
 		
 		if(letter == l) {
-			if(l == '#') return true;
-			return middle._lookup(word.substring(1));
+			if(isEnd && word.length() == 1) {
+				isEnd = false;
+				if(left.isNull && middle.isNull && right.isNull && !isEnd) {
+					nullify();
+					return true;
+				} else {
+					return false;
+				}
+			}
+			if(middle._remove(word.substring(1))) {
+				if(left.isNull && middle.isNull && right.isNull && !isEnd) {
+					nullify();
+					return true;
+				} else {
+					return false;
+				}
+			} return false;
 		} else if(l < letter) {
-			return left._lookup(word);
+			if(left._remove(word)) {
+				if(left.isNull && middle.isNull && right.isNull && !isEnd) {
+					nullify();
+					return true;
+				} else {
+					return false;
+				}
+			} return false;
 		} else {
-			return right._lookup(word);
+			if(right._remove(word)) {
+				if(left.isNull && middle.isNull && right.isNull && !isEnd) {
+					nullify();
+					return true;
+				} else {
+					return false;
+				}
+			} return false;
+		}
+	}
+//	return false;
+
+	@Override
+	public boolean lookup(String word) {
+		if(isNull || word.isEmpty()) return false;
+		
+		char l = word.charAt(0);
+		
+		if(letter == l) {
+			if(isEnd && word.length() == 1) return true;
+			return middle.lookup(word.substring(1));
+		} else if(l < letter) {
+			return left.lookup(word);
+		} else {
+			return right.lookup(word);
 		}
 	}
 
 	@Override
 	public int count() {
-		// TODO Auto-generated method stub
-		return 0;
+		if(isNull) return 0;
+		
+		return ((isEnd) ? 1 : 0) + left.count() + middle.count() + right.count();
 	}
 
 	@Override
 	public List<String> listWords() {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> lw = new ArrayList<>();
+		
+		_listWords(lw, "");
+		
+		return lw;
+	}
+	
+	private void _listWords(List<String> lw, String cur) {
+		if(isNull) return;
+		
+		if(isEnd) {
+			lw.add(cur+letter);
+		}
+		
+		left._listWords(lw, cur);
+		middle._listWords(lw, cur+letter);
+		right._listWords(lw, cur);
 	}
 
 	@Override
 	public int nbNullPointer() {
-		// TODO Auto-generated method stub
-		return 0;
+		return (isNull ? 1 : (left.nbNullPointer()+middle.nbNullPointer()+right.nbNullPointer()));
 	}
 
 	@Override
 	public int height() {
-		// TODO Auto-generated method stub
-		return 0;
+		if(isNull) return 0;
+		
+		return 1+Math.max(Math.max(left.height(), right.height()), middle.height());
 	}
 
 	@Override
 	public int avgDepth() {
-		// TODO Auto-generated method stub
-		return 0;
+		_depthsSum = 0;
+		_nbLeaves  = 0;
+		_avgDepth(0);
+		
+		return _depthsSum / _nbLeaves;
+	}
+	
+	private void _avgDepth(int dep) {
+		if(isNull) {
+			_depthsSum += dep;
+			_nbLeaves++;
+			return;
+		} 
+		
+		left._avgDepth(dep+1);
+		middle._avgDepth(dep+1);
+		right._avgDepth(dep+1);	
 	}
 
 	@Override
 	public int nbPrefixed(String pref) {
-		// TODO Auto-generated method stub
-		return 0;
+		if(isNull) return 0;
+		
+		if(pref.isEmpty()) return count();
+		
+		char l = pref.charAt(0);
+		
+		if(letter == l) {
+			return middle.nbPrefixed(pref.substring(1));
+		} else if(l < letter) {
+			return left.nbPrefixed(pref);
+		} else {
+			return right.nbPrefixed(pref);
+		}
 	}
 
 	@Override
@@ -129,8 +216,11 @@ public class HybridTrie implements ITrie {
 
 	@Override
 	public ITrie convert() {
-		// TODO Auto-generated method stub
-		return null;
+		PatriciaTrie pt = new PatriciaTrie();
+		for(String w : listWords()) {
+			pt.insert(w);
+		}
+		return pt;
 	}
 
 	@Override
@@ -152,7 +242,9 @@ public class HybridTrie implements ITrie {
 			return;
 		}
 		
-		sb.append(me + " [label=\""+letter+"\"]\n");
+		sb.append(me + " [label=\""+letter+"\""+
+				((isEnd) ? ",shape=square" : ",shape=circle")
+				+"]\n");
 		sb.append(father + " -> " + me + "\n");
 		
 		left._draw(sb, me);
@@ -165,7 +257,7 @@ public class HybridTrie implements ITrie {
 		return _toString("| ");
 	}
 	
-	public String _toString(String blk) {
+	private String _toString(String blk) {
 		if(isNull) {
 			return "<>";
 		} else {

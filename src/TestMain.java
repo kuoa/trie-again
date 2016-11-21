@@ -12,7 +12,7 @@ public class TestMain {
                 "dactylo", "connait", "par", "coeur", "puisque", "elle", "fait", "appel", "a", "chaqune", "des",
                 "touches", "du", "clavier", "de", "la", "machine", "a", "ecrire", "?" };
 		final String[] words = new String[]{
-				"bonjour", "banane", "atome", "at"
+				"bonjour", "banane", "baleine", "atome", "at", "c", "bateau"
 		};
 		
 		HybridTrie ht = new HybridTrie();
@@ -26,14 +26,31 @@ public class TestMain {
 //		System.out.println(ht.lookup("banane"));
 //		System.out.println(ht.lookup("at"));
 //		System.out.println(ht.lookup("ati"));
+//		System.out.println(ht.lookup("ato"));
 //		System.out.println(ht.lookup("atome"));
 //		for(; ht != null; ht = ht.middle) {
 //			System.out.print(ht.letter);
 //		}
 //		System.out.println(ht.middle.middle.right.middle.middle.letter);
 		
-		System.out.println(ht.draw());
+//		System.out.println(ht.draw());
+//		System.out.println("Count = "+ht.count());
+//		System.out.println(ht.listWords());
+//		
+//		System.out.println("Nb null = "+ht.nbNullPointer());
+//		System.out.println("Height = "+ht.height());
+//		System.out.println("Average depth = "+ht.avgDepth());
+//		
+//		System.out.println("#words starting by 'ba' = "+ht.nbPrefixed("ba"));
+//		System.out.println("#words starting by 'a' = "+ht.nbPrefixed("a"));
+//		System.out.println("#words starting by 'ki' = "+ht.nbPrefixed("ki"));
 		
+		ht.remove("banane");
+		ht.remove("atome");
+		ht.remove("hello");
+		ht.remove("c");
+		
+		System.out.println(ht.listWords());
 	}
 }
 
