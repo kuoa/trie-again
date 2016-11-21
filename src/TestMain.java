@@ -20,6 +20,8 @@ public class TestMain {
 			ht.insert(w);
 		}
 		
+//		System.out.println(ht);
+		
 //		System.out.println(ht.lookup("banen"));
 //		System.out.println(ht.lookup("banane"));
 //		System.out.println(ht.lookup("at"));

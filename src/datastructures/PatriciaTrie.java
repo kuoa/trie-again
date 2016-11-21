@@ -54,7 +54,11 @@ public class PatriciaTrie implements ITrie {
                 String oldRest = prefix.substring(commonPrefixIndex);
 
                 /* insert uncommon part and his child */
-                Tuple<String, PatriciaTrie> oldChildTuple = new Tuple<>(oldRest, child);
+                Tuple<Stritem.out.println(ht.lookup("banen"));
+        		System.out.println(ht.lookup("banane"));
+        		System.out.println(ht.lookup("at"));
+        		System.out.println(ht.lookup("ati"));
+        		System.out.println(ht.lookup("atome"));ng, PatriciaTrie> oldChildTuple = new Tuple<>(oldRest, child);
                 newSon.data.put(oldRest.charAt(0), oldChildTuple);
 
                 /* insert new word */
@@ -90,7 +94,11 @@ public class PatriciaTrie implements ITrie {
             PatriciaTrie child = value.child;
             String prefix = value.prefix;
 
-            /* word found */
+            /* word found */tem.out.println(ht.lookup("banen"));
+    		System.out.println(ht.lookup("banane"));
+    		System.out.println(ht.lookup("at"));
+    		System.out.println(ht.lookup("ati"));
+    		System.out.println(ht.lookup("atome"));
             if(word.equals(prefix)){
                 data.remove(key);
                 return;

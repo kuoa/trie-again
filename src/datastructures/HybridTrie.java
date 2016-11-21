@@ -11,6 +11,8 @@ public class HybridTrie implements ITrie {
 	public char letter;
 	
 	private boolean isNull;
+	
+	private static int _did = 0; /* used for draw() */
 		
 	public HybridTrie() {
 		isNull = true;
@@ -74,6 +76,7 @@ public class HybridTrie implements ITrie {
 		char l = word.charAt(0);
 		
 		if(letter == l) {
+			if(l == '#') return true;
 			return middle._lookup(word.substring(1));
 		} else if(l < letter) {
 			return left._lookup(word);
@@ -132,44 +135,41 @@ public class HybridTrie implements ITrie {
 
 	@Override
 	public String draw() {
-		return "digraph T {\n" + _draw(new AtomicInteger(0), new StringBuilder(""), 0).toString() + "}";
+		StringBuilder sb = new StringBuilder("digraph T {\n");
+		_draw(sb, 0);
+		sb.append("}");
+		
+		return sb.toString();
 	}
 	
-	private StringBuilder _draw(AtomicInteger nc, StringBuilder sb, int father) {
-		String me = Integer.toString(father);
+	private void _draw(StringBuilder sb, int father) {
+		String fath = Integer.toString(father);
+		Integer me = _did++;
 		
 		if(isNull) {
-			int id = nc.incrementAndGet();
-			sb.append("null"+ id + "[shape=point]\n");
-			sb.append(me +" -> null"+ id +"\n");
-			return sb;
+			sb.append(me + "[shape=point]\n");
+			sb.append(fath +" -> "+ me +"\n");
+			return;
 		}
 		
-		sb.append(me + "[label = \""+letter+"\"]\n");
+		sb.append(me + " [label=\""+letter+"\"]\n");
+		sb.append(father + " -> " + me + "\n");
 		
-		int ncl, ncm, ncr;
+		left._draw(sb, me);
+		middle._draw(sb, me);
+		right._draw(sb, me);
 		
-		ncl = nc.incrementAndGet();
-		sb.append(me + " -> " + ncl + "\n");//[label=\""+String.valueOf(left.letter)+"\"]\n");
-		
-		ncm = nc.incrementAndGet();
-		sb.append(me + " -> " + ncm + "\n");//[label=\""+String.valueOf(left.letter)+"\"]\n");
-		
-		ncr = nc.incrementAndGet();
-		sb.append(me + " -> " + ncr + "\n");
-		
-		left._draw(nc, sb, ncl);
-		middle._draw(nc, sb, ncm);
-		right._draw(nc, sb, ncr);
-		
-		return sb;
 	}
 	
 	public String toString() {
+		return _toString("| ");
+	}
+	
+	public String _toString(String blk) {
 		if(isNull) {
 			return "<>";
 		} else {
-			return "["+letter+"]("+left.toString()+", "+middle.toString()+", "+right.toString()+")";
+			return "["+letter+"]\n"+blk+left._toString(blk+"| ")+"\n"+blk+middle._toString(blk+"| ")+"\n"+blk+right._toString(blk+"| ")+")";
 		}
 	}
 
