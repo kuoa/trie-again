@@ -34,6 +34,7 @@ public class HybridTrie implements ITrie {
 	
 	public void nullify() {
 		isNull = true;
+		isEnd = false;
 		left = null;
 		right = null;
 		middle = null;
@@ -69,6 +70,15 @@ public class HybridTrie implements ITrie {
 		_remove(word);
 	}
 	
+	private boolean rot() {
+		if(left.isNull && middle.isNull && right.isNull && !isEnd) {
+			nullify();
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	private boolean _remove(String word) { /* returns true if children was nullified */
 		if(isNull || word.isEmpty()) return false;
 		
@@ -77,38 +87,18 @@ public class HybridTrie implements ITrie {
 		if(letter == l) {
 			if(isEnd && word.length() == 1) {
 				isEnd = false;
-				if(left.isNull && middle.isNull && right.isNull && !isEnd) {
-					nullify();
-					return true;
-				} else {
-					return false;
-				}
+				return rot();
 			}
 			if(middle._remove(word.substring(1))) {
-				if(left.isNull && middle.isNull && right.isNull && !isEnd) {
-					nullify();
-					return true;
-				} else {
-					return false;
-				}
+				return rot();
 			} return false;
 		} else if(l < letter) {
 			if(left._remove(word)) {
-				if(left.isNull && middle.isNull && right.isNull && !isEnd) {
-					nullify();
-					return true;
-				} else {
-					return false;
-				}
+				return rot();
 			} return false;
 		} else {
 			if(right._remove(word)) {
-				if(left.isNull && middle.isNull && right.isNull && !isEnd) {
-					nullify();
-					return true;
-				} else {
-					return false;
-				}
+				return rot();
 			} return false;
 		}
 	}
