@@ -10,8 +10,8 @@ public class PatriciaTrie implements ITrie {
 
     public final static Character epsilon = '#';
     private static Integer id = 0; /* used for drawing */
-    private final int DEPTH_SUM = 0; /* used for average depth */
-    private final int NULL_POINTERS_SUM = 1; /* used for average depth */
+    private static final int DEPTH_SUM = 0; /* used for average depth */
+    private static int NULL_POINTERS_SUM = 1; /* used for average depth */
 
     public PatriciaTrie() {
         data = new Hashtable<>();
@@ -325,10 +325,88 @@ public class PatriciaTrie implements ITrie {
         return 0;
     }
 
-    @Override
-    public ITrie merge(ITrie trie) {
-        // TODO Auto-generated method stub
-        return null;
+    public void merge(PatriciaTrie mergeTrie) {
+
+        /* long live the users */
+        if(mergeTrie == null){
+            return;
+        }
+
+        PatriciaTrie primaryTrie = this;
+
+        for(Entry<Character, Tuple<String, PatriciaTrie>> e : mergeTrie.data.entrySet()) {
+            Tuple<String, PatriciaTrie> mergeTuple = e.getValue();
+            Character mergeKey = e.getKey();
+
+            if(primaryTrie.data.containsKey(mergeKey)){
+                Tuple<String, PatriciaTrie> primaryTuple = primaryTrie.data.get(mergeKey);
+
+                /* same prefix */
+                /* AL == AL */
+                if(primaryTuple.prefix.equals(mergeTuple.prefix)){
+                    if(mergeTuple.child != null) {
+                        primaryTuple.child.merge(mergeTuple.child);
+                    }
+                    continue;
+                }
+
+                /* get common prefix */
+                int commonPrefixIndex = getCommonPrefixIndex(primaryTuple.prefix, mergeTuple.prefix);
+                String commonPrefix = primaryTuple.prefix.substring(0, commonPrefixIndex);
+
+                /* common prefix same size as primaryPrefix */
+                /* AL <-> ALASKA */
+                if(commonPrefix.length() == primaryTuple.prefix.length()){
+                    String mergeSuffix = mergeTuple.prefix.substring(commonPrefixIndex);
+
+                    Tuple<String, PatriciaTrie> newMergeTuple = new Tuple<>(mergeSuffix, mergeTuple.child);
+                    PatriciaTrie newMergePat = new PatriciaTrie();
+                    newMergePat.data.put(mergeSuffix.charAt(0), newMergeTuple);
+
+                    primaryTuple.child.merge(newMergePat);
+                    continue;
+                }
+
+                /* common prefix same size as mergePrefix */
+                /* ALASKA <-> AL */
+                if(commonPrefix.length() == mergeTuple.prefix.length()){
+
+                    String primarySuffix = primaryTuple.prefix.substring(commonPrefixIndex);
+
+                    Tuple<String, PatriciaTrie> newPrimaryTuple = new Tuple<>(primarySuffix, primaryTuple.child);
+                    PatriciaTrie newPrimaryPat = new PatriciaTrie();
+                    newPrimaryPat.data.put(primarySuffix.charAt(0), newPrimaryTuple);
+
+                    /* replace node */
+                    primaryTrie.data.put(commonPrefix.charAt(0), mergeTuple);
+                    mergeTuple.child.merge(newPrimaryPat);
+                    continue;
+                }
+
+                /* common prefix size different than primaryPrefix  and mergePrefix */
+                /* ABC <-> ACD */
+
+                PatriciaTrie commonTrie = new PatriciaTrie();
+
+                /* BC */
+                String primarySuffix = primaryTuple.prefix.substring(commonPrefixIndex);
+                Tuple<String, PatriciaTrie> newPrimaryTuple = new Tuple<>(primarySuffix, primaryTuple.child);
+                commonTrie.data.put(primarySuffix.charAt(0), newPrimaryTuple);
+
+                /* CD */
+                String mergeSuffix = mergeTuple.prefix.substring(commonPrefixIndex);
+                Tuple<String, PatriciaTrie> newMergeTuple = new Tuple<>(mergeSuffix, mergeTuple.child);
+                commonTrie.data.put(mergeSuffix.charAt(0), newMergeTuple);
+
+                /* replace old node */
+                Tuple<String, PatriciaTrie> commonTuple = new Tuple<>(commonPrefix, commonTrie);
+                primaryTrie.data.put(commonPrefix.charAt(0), commonTuple);
+            }
+            else{
+                /* key not present | insert whole branch */
+                primaryTrie.data.put(mergeKey, mergeTuple);
+            }
+        }
     }
 
     @Override

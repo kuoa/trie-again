@@ -199,12 +199,6 @@ public class HybridTrie implements ITrie {
 	}
 
 	@Override
-	public ITrie merge(ITrie trie) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public ITrie convert() {
 		PatriciaTrie pt = new PatriciaTrie();
 		for(String w : listWords()) {

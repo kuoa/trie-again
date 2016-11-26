@@ -9,7 +9,7 @@ import java.util.List;
 import interfaces.ITrie;
 
 
-public class Benchmark {
+public class Benchmark_old {
 	private ITrie tree;
 	
 	private long elapsed = 0;
@@ -32,7 +32,7 @@ public class Benchmark {
 		return nWords;
 	}
 	
-	public Benchmark() {
+	public Benchmark_old() {
 	}
 	
 	public void initBench(ITrie t) {

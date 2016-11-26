@@ -13,8 +13,7 @@ public interface ITrie {
 	public int height();
 	public int avgDepth(); /* double? */
 	public int nbPrefixed(String pref);	
-	
-	public ITrie merge(ITrie trie);
+
 	public ITrie convert();
 
     /* DOT language */
