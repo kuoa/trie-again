@@ -11,7 +11,7 @@ public class PatriciaTrie implements ITrie {
     public final static Character epsilon = '#';
     private static Integer id = 0; /* used for drawing */
     private static final int DEPTH_SUM = 0; /* used for average depth */
-    private static int NULL_POINTERS_SUM = 1; /* used for average depth */
+    private static final int NULL_POINTERS_SUM = 1; /* used for average depth */
 
     public PatriciaTrie() {
         data = new Hashtable<>();
