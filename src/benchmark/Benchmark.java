@@ -44,8 +44,19 @@ public class Benchmark {
             "iago", "who", "hast", "had", "my", "purse", "as", "if", "the", "strings", "were", "thine",
             "shouldst", "know", "of", "serious", "brow", "sad", "high", "and", "working", "full", "of", "state",
             "and", "woe", "such", "noble", "scenes", "as", "draw", "the", "eye", "to", "flow", "we", "unfold",
-            "would", "seem", "in", "me", "to", "affect", "speech", "and", "discourse"
-    };
+            "would", "seem", "in", "me", "to", "affect", "speech", "and", "discourse", "hich", "now", "the",
+            "manage", "of", "two", "kingdoms", "must", "with", "fearful", "bloody", "issue", "arbitrate", "king",
+            "john", "our", "strong", "possession", "and", "our", "right", "for", "us", "queen", "elinor", "your",
+            "strong", "possession", "much", "more", "than", "your", "right", "or", "else", "it", "must", "go", "wrong",
+            "with", "you", "and", "me", "so", "much", "my", "conscience", "whispers", "in", "your", "ear", "which",
+            "none", "but", "heaven", "and", "you", "and", "i", "shall", "hear", "enter", "a", "sheriff", "essex", "my",
+            "liege", "here", "is", "the", "strangest", "controversy", "come", "from", "country", "to", "be", "judged",
+            "by", "you", "that", "e", "er", "i", "heard", "shall", "i", "produce", "the", "men", "king", "john", "let",
+            "them", "approach", "our", "abbeys", "and", "our", "priories", "shall", "pay", "this", "expedition", "s",
+            "charge", "enter", "robert", "and", "the", "bastard", "what", "men", "are", "you", "bastard", "your",
+            "faithful", "subject", "i", "a", "gentleman", "born", "in", "northamptonshire", "and", "eldest", "son",
+            "as", "i", "suppose", "to", "robert", "faulconbridge", "a", "soldier", "by", "the", "honour", "giving",
+            "hand", "of"};
 
     /**
      * Initialize benchmark parameters
