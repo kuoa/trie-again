@@ -7,32 +7,7 @@ import java.util.List;
 
 public class TestMain {
 	public static void main(String[] args) {
-		/**** c'est un peu brouillon, faudra surement modifier un peu des trucs ****/
-		Benchmark_old b = new Benchmark_old();
-		ITrie pt = null, ht = null;
-		
-		for(int i=1; i <= 5; i++) {
-			b.initBench(new HybridTrie());
-			b.insertBench("/users/nfs/Etu3/3300543/workspace/trie-again/data/test"+i+".in");
-			System.out.println("Reading a total of "+b.getnChars()+" chars in Hybrid, time : "+b.getElapsed()+" µs");
-			ht = b.getTree();
-		}
-		
-		for(int i=1; i <= 5; i++) {
-			b.initBench(new PatriciaTrie());
-			b.insertBench("/users/nfs/Etu3/3300543/workspace/trie-again/data/test"+i+".in");
-			System.out.println("Reading a total of "+b.getnChars()+" chars in PATRICIA, time : "+b.getElapsed()+" µs");
-			pt = b.getTree();
-		}
-		
-		b.initBench(null);
-		b.lookupBench("/users/nfs/Etu3/3300543/workspace/trie-again/data/test5.in", pt);
-		System.out.println("Looking for "+b.getnChars()+" chars in PATRICIA, time : "+b.getElapsed()+" µs");
-		
-		b.initBench(null);
-		b.lookupBench("/users/nfs/Etu3/3300543/workspace/trie-again/data/test5.in", ht);
-		System.out.println("Looking for "+b.getnChars()+" chars in Hybrid, time : "+b.getElapsed()+" µs");		
-	
+
 		
 		
 //		final String[] words2 = new String[]{
