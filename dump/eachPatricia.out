@@ -1,3 +1,4 @@
+Input                       CurrentTime[s]              TotalTime[s]                WordsInFile                 WordsInTrie                 Height                      Average height
 ./data/3henryvi.txt         0.05426                     0.05426                     26523                       3448                        8                           4                           
 ./data/twelfth_night.txt    0.01934                     0.01934                     21856                       3030                        9                           4                           
 ./data/romeo_juliet.txt     0.02352                     0.02352                     26507                       3545                        8                           4                           

@@ -210,6 +210,8 @@ public class Benchmark {
 
         System.out.println("Building each trie for " + trie.getClass().getSimpleName());
 
+        printHeader();
+
         for(String file : getFileNames()){
             /* loading content in memory */
             if(trie instanceof PatriciaTrie){
@@ -241,7 +243,7 @@ public class Benchmark {
 
         output.printf(format, "Input");
         output.printf(format, "CurrentTime[s]");
-        output.printf(format, "TotalTime[s]");
+        output.print("\n");
 
         for(String file : getFileNames()){
             /* loading content in memory */
