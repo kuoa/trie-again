@@ -1,5 +1,6 @@
-Input                       CurrentTime[s]              TotalTime[s]                ./data/3henryvi.txt         0.00142                     
-./data/twelfth_night.txt    0.00055                     
+Input                       CurrentTime[s]
+./data/3henryvi.txt         0.00142                     
+./Data/twelfth_night.txt    0.00055                     
 ./data/romeo_juliet.txt     0.00045                     
 ./data/lear.txt             0.00036                     
 ./data/hamlet.txt           0.00039                     

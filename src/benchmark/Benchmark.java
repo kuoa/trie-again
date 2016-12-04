@@ -287,6 +287,11 @@ public class Benchmark {
 
     }
 
+    /**
+     * Compares the merge time and succesive add time for all input data
+     * @param verbose
+     */
+
     public void mergeVsAdd(boolean verbose){
         System.out.println("Starting merge vs add");
 
@@ -294,36 +299,42 @@ public class Benchmark {
 
         output.printf(formatString, "Input First");
         output.printf(formatString, "Input Second");
-        output.printf(formatString, "MergeTime[s]");
-        output.printf(formatString, "SuccesiveAddTime[s]");
+        output.printf(formatString, "PATMergeTime[s]");
+        output.printf(formatString, "PATSuccesiveAddTime[s]");
+        output.printf(formatString, "HYBSuccesiveAddTime[s]");
         output.print("\n");
 
         for(int i = 0; i < files.size(); i++){
 
-            PatriciaTrie first = new PatriciaTrie();
+            PatriciaTrie firstPat = new PatriciaTrie();
+            HybridTrie firstHyb = new HybridTrie();
             /* load file */
             setInput(files.get(i));
 
             for(String word : words){
-                first.insert(word);
+                firstPat.insert(word);
+                firstHyb.insert(word);
             }
 
             for(int j = 0; j < files.size(); j++){
                 if(i == j) continue;
 
-                PatriciaTrie second = new PatriciaTrie();
+                PatriciaTrie secondPat = new PatriciaTrie();
+                HybridTrie secondHyb = new HybridTrie();
                 /*load file */
                 setInput(files.get(j));
 
                 for(String word : words){
-                    second.insert(word);
+                    secondPat.insert(word);
+                    secondHyb.insert(word);
                 }
 
                 output.printf(formatString, files.get(i));
                 output.printf(formatString, files.get(j));
 
-                merge(first, second, verbose);
-                succesiveAdd(first, second, verbose);
+                mergePatricia(firstPat, secondPat, verbose);
+                succesiveAddPatricia(firstPat, secondPat, verbose);
+                succesiveAddHybrid(firstHyb, secondHyb, verbose);
 
                 output.print("\n");
             }
@@ -332,10 +343,10 @@ public class Benchmark {
         output.close();
     }
 
-    private void succesiveAdd(PatriciaTrie first, PatriciaTrie second, boolean verbose){
+    private void succesiveAddPatricia(PatriciaTrie first, PatriciaTrie second, boolean verbose){
         PatriciaTrie firstCloned = first.clone();
 
-        System.out.println("Starting succesive Add");
+        System.out.println("Starting succesive Add Patricia");
 
         start = System.nanoTime();
 
@@ -355,7 +366,30 @@ public class Benchmark {
         }
     }
 
-    private void merge(PatriciaTrie first, PatriciaTrie second, boolean verbose){
+    private void succesiveAddHybrid(HybridTrie first, HybridTrie second, boolean verbose){
+        HybridTrie firstCloned = first.clone();
+
+        System.out.println("Starting succesive Add Hybrid");
+
+        start = System.nanoTime();
+
+        for(String word : second.listWords()){
+            firstCloned.insert(word);
+        }
+
+        currentTime = (System.nanoTime() - start) / SECOND;
+        output.printf(formatDouble, currentTime);
+
+        if(verbose){
+            System.out.println("Words in first " + first.count());
+            System.out.println("Words in second " + second.count());
+            System.out.println("Words new count " + firstCloned.count());
+            System.out.println("Rezult " + currentTime + "\n");
+
+        }
+    }
+
+    private void mergePatricia(PatriciaTrie first, PatriciaTrie second, boolean verbose){
         PatriciaTrie firstCloned = first.clone();
         PatriciaTrie secondCloned = second.clone();
 

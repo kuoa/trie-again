@@ -208,6 +208,22 @@ public class HybridTrie implements ITrie {
 	}
 
 	@Override
+	public HybridTrie clone() {
+		if(isNull) return nullHT();
+
+		HybridTrie nt = new HybridTrie();
+		nt.isEnd = isEnd;
+		nt.isNull = isNull;
+		nt.letter = letter;
+
+		nt.left = left.clone();
+		nt.middle = middle.clone();
+		nt.right = right.clone();
+
+		return nt;
+	}
+
+	@Override
 	public String draw() {
 		StringBuilder sb = new StringBuilder("digraph T {\n");
 		_draw(sb, 0);

@@ -12,7 +12,7 @@ public class BenchmarkMergeVsAdd {
         Benchmark benchmark = new Benchmark();
 
         PatriciaTrie patriciaTrie = new PatriciaTrie();
-        benchmark.initialize(patriciaTrie);
+        benchmark.initialize(null);
         benchmark.setOutput("mergeVsAdd.out");
         benchmark.mergeVsAdd(false);
     }

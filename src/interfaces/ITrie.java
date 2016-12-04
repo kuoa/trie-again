@@ -15,6 +15,7 @@ public interface ITrie {
 	public int nbPrefixed(String pref);	
 
 	public ITrie convert();
+	public ITrie clone();
 
     /* DOT language */
 	public String draw();

@@ -4,11 +4,11 @@ Input                       CurrentTime[s]
 ./data/lear.txt             0.00014                     
 ./data/hamlet.txt           0.00018                     
 ./data/measure.txt          0.00015                     
-./data/asyoulikeit.txt      0.00302                     
+./data/asyoulikeit.txt      0.00092                     
 ./data/troilus_cressida.txt 0.00018                     
 ./data/taming_shrew.txt     0.00010                     
 ./data/coriolanus.txt       0.00013                     
-./data/henryviii.txt        0.00336                     
+./data/henryviii.txt        0.00086                     
 ./data/two_gentlemen.txt    0.00010                     
 ./data/cleopatra.txt        0.00011                     
 ./data/pericles.txt         0.00011                     
