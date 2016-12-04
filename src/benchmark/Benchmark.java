@@ -24,7 +24,9 @@ public class Benchmark {
     private static final double SECOND = 1000000000.0;
     private static final String dataFolder = "./data/";
     private static final String dumpFolder = "./dump/";
-    private static final String format = "%-28s";
+    private static final String formatString = "%-28s";
+    private static final String formatDouble = "%-28.5f";
+
 
     private static final String[] wordsToDelete = new String[]{
             "the", "life", "of", "king", "henry", "the", "eighth", "act", "i", "prologue", "i", "come",
@@ -137,13 +139,13 @@ public class Benchmark {
         currentTime = (System.nanoTime() - start) / SECOND;
         totalTime += currentTime;
 
-        output.printf(format, input);
-        output.printf("%-28.5f", currentTime);
-        output.printf("%-28.5f", totalTime);
-        output.printf(format, words.size());
-        output.printf(format, trie.count());
-        output.printf(format, trie.height());
-        output.printf(format, trie.avgDepth());
+        output.printf(formatString, input);
+        output.printf(formatDouble, currentTime);
+        output.printf(formatDouble, totalTime);
+        output.printf(formatString, words.size());
+        output.printf(formatString, trie.count());
+        output.printf(formatString, trie.height());
+        output.printf(formatString, trie.avgDepth());
         output.print("\n");
 
         if(verbose) {
@@ -170,8 +172,8 @@ public class Benchmark {
         currentTime = (System.nanoTime() - start) / SECOND;
         totalTime += currentTime;
 
-        output.printf(format, input);
-        output.printf("%-28.5f", currentTime);
+        output.printf(formatString, input);
+        output.printf(formatDouble, currentTime);
         output.print("\n");
 
         if(verbose) {
@@ -198,7 +200,7 @@ public class Benchmark {
             build(verbose);
         }
 
-        output.printf("%s %-28.5f","Total Time", totalTime);
+        output.printf(formatDouble,"Total Time", totalTime);
         output.close();
     }
 
@@ -231,7 +233,6 @@ public class Benchmark {
         output.close();
     }
 
-
     /**
      * Build a trie for each data input
      * remove from each trie the words from "wordsToDelete"
@@ -241,8 +242,8 @@ public class Benchmark {
 
         System.out.println("Removing words from each trie for " + trie.getClass().getSimpleName());
 
-        output.printf(format, "Input");
-        output.printf(format, "CurrentTime[s]");
+        output.printf(formatString, "Input");
+        output.printf(formatString, "CurrentTime[s]");
         output.print("\n");
 
         for(String file : getFileNames()){
@@ -286,14 +287,104 @@ public class Benchmark {
 
     }
 
+    public void mergeVsAdd(boolean verbose){
+        System.out.println("Starting merge vs add");
+
+        List<String> files = getFileNames();
+
+        output.printf(formatString, "Input First");
+        output.printf(formatString, "Input Second");
+        output.printf(formatString, "MergeTime[s]");
+        output.printf(formatString, "SuccesiveAddTime[s]");
+        output.print("\n");
+
+        for(int i = 0; i < files.size(); i++){
+
+            PatriciaTrie first = new PatriciaTrie();
+            /* load file */
+            setInput(files.get(i));
+
+            for(String word : words){
+                first.insert(word);
+            }
+
+            for(int j = 0; j < files.size(); j++){
+                if(i == j) continue;
+
+                PatriciaTrie second = new PatriciaTrie();
+                /*load file */
+                setInput(files.get(j));
+
+                for(String word : words){
+                    second.insert(word);
+                }
+
+                output.printf(formatString, files.get(i));
+                output.printf(formatString, files.get(j));
+
+                merge(first, second, verbose);
+                succesiveAdd(first, second, verbose);
+
+                output.print("\n");
+            }
+        }
+
+        output.close();
+    }
+
+    private void succesiveAdd(PatriciaTrie first, PatriciaTrie second, boolean verbose){
+        PatriciaTrie firstCloned = first.clone();
+
+        System.out.println("Starting succesive Add");
+
+        start = System.nanoTime();
+
+        for(String word : second.getWordsUnsorted()){
+           firstCloned.insert(word);
+        }
+
+        currentTime = (System.nanoTime() - start) / SECOND;
+        output.printf(formatDouble, currentTime);
+
+        if(verbose){
+            System.out.println("Words in first " + first.count());
+            System.out.println("Words in second " + second.count());
+            System.out.println("Words new count " + firstCloned.count());
+            System.out.println("Rezult " + currentTime + "\n");
+
+        }
+    }
+
+    private void merge(PatriciaTrie first, PatriciaTrie second, boolean verbose){
+        PatriciaTrie firstCloned = first.clone();
+        PatriciaTrie secondCloned = second.clone();
+
+        System.out.println("Starting merge");
+
+        start = System.nanoTime();
+
+        firstCloned.merge(secondCloned);
+
+        currentTime = (System.nanoTime() - start) / SECOND;
+        output.printf(formatDouble, currentTime);
+
+        if(verbose){
+            System.out.println("Starting merge");
+            System.out.println("Words in first " + first.count());
+            System.out.println("Words in second " + second.count());
+            System.out.println("Words new count " + firstCloned.count());
+            System.out.println("Rezult " + currentTime + "\n");
+        }
+    }
+
     private void printHeader(){
-        output.printf(format, "Input");
-        output.printf(format, "CurrentTime[s]");
-        output.printf(format, "TotalTime[s]");
-        output.printf(format, "WordsInFile");
-        output.printf(format, "WordsInTrie");
-        output.printf(format, "Height");
-        output.printf(format, "Average height");
+        output.printf(formatString, "Input");
+        output.printf(formatString, "CurrentTime[s]");
+        output.printf(formatString, "TotalTime[s]");
+        output.printf(formatString, "WordsInFile");
+        output.printf(formatString, "WordsInTrie");
+        output.printf(formatString, "Height");
+        output.printf(formatString, "Average height");
         output.print("\n");
     }
 

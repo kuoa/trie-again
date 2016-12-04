@@ -473,4 +473,30 @@ public class PatriciaTrie implements ITrie {
 
         return i;
     }
+
+
+
+    public PatriciaTrie clone(){
+        PatriciaTrie cPatriciaTrie = new PatriciaTrie();
+
+        for(Entry<Character, Tuple<String, PatriciaTrie>> e : data.entrySet()) {
+            Tuple<String, PatriciaTrie> tuple = e.getValue();
+
+
+            Tuple<String, PatriciaTrie> cTuple =
+                    new Tuple<>(tuple.prefix, tuple.child == null ? tuple.child : tuple.child.clone());
+            cPatriciaTrie.data.put(e.getKey(), cTuple);
+        }
+
+        return cPatriciaTrie;
+    }
+
+    public List<String> getWordsUnsorted() {
+        List<String> listWords = new ArrayList<>();
+
+        listWordsRecursive(this, "", listWords);
+
+        return listWords;
+    }
+
 }

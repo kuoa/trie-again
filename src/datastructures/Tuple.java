@@ -1,6 +1,6 @@
 package datastructures;
 
-public class Tuple<A, B> {
+public class Tuple<A, B>{
 	public A prefix;
 	public B child;
 	
@@ -8,4 +8,5 @@ public class Tuple<A, B> {
 		prefix = _prefix;
 		child = _child;
 	}
+
 }

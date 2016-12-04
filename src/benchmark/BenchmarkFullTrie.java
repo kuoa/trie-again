@@ -1,3 +1,5 @@
+package benchmark;
+
 import benchmark.Benchmark;
 import datastructures.HybridTrie;
 import datastructures.PatriciaTrie;

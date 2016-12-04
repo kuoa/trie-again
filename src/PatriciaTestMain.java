@@ -25,6 +25,20 @@ public class PatriciaTestMain {
         trie.insert("foam");
         trie.insert("flower");
 
+        PatriciaTrie cloned = trie.clone();
+
+        System.out.println(trie.draw());
+        System.out.println(cloned.draw());
+
+        trie.insert("BBBBBBBB");
+        trie.remove("foam");
+        cloned.insert("CCCCC");
+
+        System.out.println(trie.draw());
+        System.out.println(cloned.draw());
+
+
+        /*
 
         mergeWithTrie.insert("rainbow");
         mergeWithTrie.insert("rain");
@@ -35,11 +49,13 @@ public class PatriciaTestMain {
         mergeWithTrie.insert("hole");
         mergeWithTrie.insert("fortune");
 
+
         System.out.println(trie.draw());
         System.out.println(mergeWithTrie.draw());
 
         trie.merge(mergeWithTrie);
         System.out.println(trie.draw());
+        */
 
 
 
