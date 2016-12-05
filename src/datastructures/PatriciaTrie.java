@@ -410,15 +410,63 @@ public class PatriciaTrie implements ITrie {
     }
 
     @Override
-    public ITrie convert() {
+    public HybridTrie convert() {
 
         HybridTrie hybridTrie = new HybridTrie();
-
-        for(String word : listWords()){
-            hybridTrie.insert(word);
-        }
-
+        
+        convertRecur(clone(), hybridTrie);
+        
         return hybridTrie;
+    }
+    
+    private void convertRecur(PatriciaTrie pat, HybridTrie ht) {
+    
+    	Iterator<Map.Entry<Character,Tuple<String,PatriciaTrie>>> iter =
+    			pat.data.entrySet().iterator();
+    	while(iter.hasNext()) {
+    		HybridTrie ptr = ht;
+    		
+    		Tuple<String, PatriciaTrie> v = iter.next().getValue();
+            String prefix = v.prefix;
+            
+            System.out.println("prefix = "+prefix);
+    		
+    		if(ptr.isNull()) {
+    			
+    			System.out.println("Ajout");
+    			
+                for(int i = 0; i < prefix.length(); i++) {
+                	Character c = prefix.charAt(i);
+                	
+                	if(c.equals(epsilon)) {
+                		ptr.setEnd();
+                	} else {
+                		ptr.middle = new HybridTrie();
+                		ptr.set(c);
+                	}
+                	
+                	ptr = ptr.middle;         
+                }
+//                iter.remove();
+                if(v.child != null) {
+                	convertRecur(v.child, ptr);
+                }
+                
+    		} else if(prefix.charAt(0) < ptr.letter){ /* insert left */
+    			
+    			if(v.child != null) {
+    				System.out.println("Left -> "+ptr.letter);
+    				convertRecur(v.child, ptr.left);
+    			}
+    		} else { /* insert right */
+    			
+    			if(v.child != null) {
+    				System.out.println("Right -> "+ptr.letter);
+    				convertRecur(v.child, ptr.right);
+    			}
+    		}
+      
+        }
     }
 
     @Override

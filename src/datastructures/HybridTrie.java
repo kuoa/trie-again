@@ -14,10 +14,13 @@ public class HybridTrie implements ITrie {
 	
 	private static int _did = 0; /* used for draw() */
 	private static int _depthsSum, _nbLeaves;
+	
+	private int height;
 		
 	public HybridTrie() {
 		isNull = true;
 		isEnd = false;
+		height = 0;
 	}
 	
 	public static HybridTrie nullHT() {
@@ -27,6 +30,7 @@ public class HybridTrie implements ITrie {
 	public void set(char l) {
 		isNull = false;
 		letter = l;
+		height = 1;
 		left = nullHT();
 		middle = nullHT();
 		right = nullHT();
@@ -63,6 +67,72 @@ public class HybridTrie implements ITrie {
 		}
 				
 		
+	}
+	
+	public void balancedInsert(String word) {
+		if(word.isEmpty()) return;
+		
+		char l = word.charAt(0);
+		if(isNull) {
+			set(l);
+			if(word.length() == 1) isEnd = true;
+			middle.insert(word.substring(1));
+			return;
+		}
+		
+		if(l < letter) {
+			left.balancedInsert(word);
+		}
+		else if(l > letter) {
+			right.balancedInsert(word);
+		} else {
+			if(word.length() == 1) isEnd = true;
+			middle.balancedInsert(word.substring(1));
+		}
+		
+		height = 1+Math.max(left.height, right.height);
+		
+		right = balance(right);
+		left = balance(left);
+	}
+
+	private static HybridTrie balance(HybridTrie A) {
+		if(A.isNull) return A;
+		
+		if(A.left.height - A.right.height == 2) { /* need right rotation */
+			if(A.left.height < A.right.height) {
+				A.left = rotateLeft(A.left);
+			}
+			A = rotateRight(A);
+		} else if(A.left.height - A.right.height == -2) { /* need left rotation */
+			if(A.right.height < A.left.height) {
+				A.right = rotateRight(A.right);
+			}
+			A = rotateLeft(A);
+		}
+		
+		return A;		
+	}
+
+	private static HybridTrie rotateLeft(HybridTrie a) {
+		HybridTrie nv = a.right;
+		a.right = nv.left;
+		nv.left = a;
+		
+		/* update heights */
+		
+		
+		return nv;
+	}
+
+	private static HybridTrie rotateRight(HybridTrie a) {
+		HybridTrie nv = a.left;
+		a.left = nv.right;
+		nv.right = a;
+		
+		
+		
+		return nv;
 	}
 
 	@Override
@@ -242,7 +312,7 @@ public class HybridTrie implements ITrie {
 			return;
 		}
 		
-		sb.append(me + " [label=\""+letter+"\""+
+		sb.append(me + " [label=\""+letter+" ["+height+"]\""+
 				((isEnd) ? ",shape=square" : ",shape=circle")
 				+"]\n");
 		sb.append(father + " -> " + me + "\n");
@@ -263,6 +333,14 @@ public class HybridTrie implements ITrie {
 		} else {
 			return "["+letter+"]\n"+blk+left._toString(blk+"| ")+"\n"+blk+middle._toString(blk+"| ")+"\n"+blk+right._toString(blk+"| ")+")";
 		}
+	}
+	
+	public void setEnd() {
+		isEnd = true;
+	}
+	
+	public boolean isNull() {
+		return isNull;
 	}
 
 }

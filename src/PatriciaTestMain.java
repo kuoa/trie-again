@@ -1,3 +1,4 @@
+import datastructures.HybridTrie;
 import datastructures.PatriciaTrie;
 
 import java.util.List;
@@ -25,17 +26,21 @@ public class PatriciaTestMain {
         trie.insert("foam");
         trie.insert("flower");
 
-        PatriciaTrie cloned = trie.clone();
-
-        System.out.println(trie.draw());
-        System.out.println(cloned.draw());
-
-        trie.insert("BBBBBBBB");
-        trie.remove("foam");
-        cloned.insert("CCCCC");
-
-        System.out.println(trie.draw());
-        System.out.println(cloned.draw());
+//        PatriciaTrie cloned = trie.clone();
+//
+//        System.out.println(trie.draw());
+//        System.out.println(cloned.draw());
+//
+//        trie.insert("BBBBBBBB");
+//        trie.remove("foam");
+//        cloned.insert("CCCCC");
+//
+//        System.out.println(trie.draw());
+//        System.out.println(cloned.draw());
+        
+        HybridTrie ht = trie.convert();
+//        System.out.println(trie.draw());
+        System.out.println(ht.draw());
 
 
         /*

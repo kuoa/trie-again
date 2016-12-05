@@ -2,6 +2,9 @@ import datastructures.HybridTrie;
 import datastructures.PatriciaTrie;
 import interfaces.ITrie;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -15,14 +18,15 @@ public class TestMain {
 //                "la", "superbe", "phrase", "ci", "dessus", ",", "un", "modele", "du", "genre", ",", "que", "toute",
 //                "dactylo", "connait", "par", "coeur", "puisque", "elle", "fait", "appel", "a", "chaqune", "des",
 //                "touches", "du", "clavier", "de", "la", "machine", "a", "ecrire", "?" };
-//		final String[] words = new String[]{
-//				"bonjour", "banane", "baleine", "atome", "at", "c", "bateau"
-//		};
+		final String[] words = new String[]{
+				"aaa", "bbb", "ccc", "ddd", "eee", "fff", "ggg", "hhh", "iii"
+		};
+		
 //		
-//		HybridTrie ht = new HybridTrie();
-//		for(String w : words) {
-//			ht.insert(w);
-//		}
+		HybridTrie ht = new HybridTrie();
+		for(String w : words) {
+			ht.balancedInsert(w);
+		}
 		
 //		System.out.println(ht);
 		
@@ -37,9 +41,9 @@ public class TestMain {
 //		}
 //		System.out.println(ht.middle.middle.right.middle.middle.letter);
 		
-//		System.out.println(ht.draw());
+		System.out.println(ht.draw());
 //		System.out.println("Count = "+ht.count());
-//		System.out.println(ht.listWords());
+		System.out.println(ht.listWords());
 //		
 //		System.out.println("Nb null = "+ht.nbNullPointer());
 //		System.out.println("Height = "+ht.height());
