@@ -148,7 +148,6 @@ class Node {
 		return nv;
 	}
 
-	/** TODO **/
 	public static Node remove(Node root, String word) {
 		if(root == null || word.isEmpty()) return null;
 		
@@ -157,20 +156,22 @@ class Node {
 		if(letter == l) {
 			if(root.isEnd && word.length() == 1) {
 				root.isEnd = false;
-				return rot();
+				return rot(root);
 			}
-			if(_remove(root.middle, word.substring(1))) {
-				return rot();
-			} return false;
+			root.middle = remove(root.middle, word.substring(1));
 		} else if(l < letter) {
-			if(left._remove(word)) {
-				return rot();
-			} return false;
+			root.left = remove(root.left, word);
 		} else {
-			if(right._remove(word)) {
-				return rot();
-			} return false;
+			root.right = remove(root.right, word);
 		}
+		return root;
+	}
+	
+	private static Node rot(Node root) {
+		if(root == null) return null;
+		
+		if(root.left == null && root.right == null && root.middle == null && !root.isEnd) return null;
+		return root;
 	}
 
 	public static boolean lookup(Node root, String word) {
@@ -300,7 +301,7 @@ public class PHybridTrie implements ITrie {
 	@Override
 	public List<String> listWords() {
 		List<String> ret = new ArrayList<>();
-		Node.listWords(root, ret);
+		Node.listWords(root, ret, "");
 		return ret;
 	}
 
