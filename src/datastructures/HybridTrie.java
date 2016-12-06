@@ -306,7 +306,7 @@ public class HybridTrie implements ITrie {
 		String fath = Integer.toString(father);
 		Integer me = _did++;
 		
-		if(isNull) {
+		if(isNull) {			
 			sb.append(me + "[shape=point]\n");
 			sb.append(fath +" -> "+ me +"\n");
 			return;
@@ -341,6 +341,10 @@ public class HybridTrie implements ITrie {
 	
 	public boolean isNull() {
 		return isNull;
+	}
+	
+	public boolean isEnd() {
+		return isEnd;
 	}
 
 }

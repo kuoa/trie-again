@@ -17,14 +17,16 @@ public class PatriciaTestMain {
 
 
         PatriciaTrie trie = new PatriciaTrie();
-        PatriciaTrie mergeWithTrie = new PatriciaTrie();
+        PatriciaTrie mergeWithTrie = new PatriciaTrie();        
 
         trie.insert("home");
         trie.insert("hi");
+        trie.insert("hit");
         trie.insert("homeless");
         trie.insert("flow");
         trie.insert("foam");
         trie.insert("flower");
+               
 
 //        PatriciaTrie cloned = trie.clone();
 //
