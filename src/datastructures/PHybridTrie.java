@@ -1,6 +1,7 @@
 package datastructures;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import interfaces.ITrie;
 
@@ -269,6 +270,46 @@ class Node {
 		
 		return n;
 	}
+
+	public static void convert(Node root, PatriciaTrie pt) {
+		if(root == null) return;
+		
+		String pref = "";
+		Node ptr = root;
+		Hashtable<Character, Tuple<String, PatriciaTrie>> hash = pt.data;
+		
+		do {
+			pref += ptr.letter;
+			ptr = ptr.middle;
+		} while(ptr != null && ptr.left == null && ptr.right == null && !ptr.isEnd);
+		
+//		System.out.println(pref);
+		
+		if(ptr != null && ptr.isEnd) {
+			pref += PatriciaTrie.epsilon;
+//			ptr = ptr.middle;
+			
+			/* reached a leaf */
+//			if(ptr.left == null && ptr.middle == null && ptr.right == null) {
+//				
+//			} else {
+//				/** what do we have to do? **/
+//			}
+		}
+		
+		PatriciaTrie np = new PatriciaTrie();
+		
+		convert(ptr, np);
+		hash.put(pref.charAt(0), new Tuple<>(pref, np));
+		
+		
+		if(root.left != null) {
+			convert(root.left, pt);
+		}
+		if(root.right != null) {
+			convert(root.right, pt);
+		}
+	}
 	
 }
 
@@ -327,7 +368,11 @@ public class PHybridTrie implements ITrie {
 
 	@Override
 	public ITrie convert() {
-		return null;
+		PatriciaTrie pt = new PatriciaTrie();
+		
+		Node.convert(root, pt);
+		
+		return pt;
 	}
 	
 	public void insertNormal(String word) {

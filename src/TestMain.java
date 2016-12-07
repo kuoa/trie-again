@@ -27,12 +27,17 @@ public class TestMain {
 		final String[] words3 = new String[]{
 				"aaa", "bbb", "ccc", "ddd", "eee", "fff", "ggg", "hhh", "iii"
 		};
+		final String[] words4 = new String[]{
+				"at", "atom"
+		};
 		
 //		
 		PHybridTrie ht = new PHybridTrie();
-		for(String w : words) {
+		for(String w : words2) {
 			ht.insert(w);
 		}
+		
+		PatriciaTrie pt = (PatriciaTrie)ht.convert();
 		
 //		System.out.println(ht);
 		
@@ -47,7 +52,7 @@ public class TestMain {
 //		}
 //		System.out.println(ht.middle.middle.right.middle.middle.letter);
 		
-		System.out.println(ht.draw());
+		System.out.println(pt.draw());
 //		System.out.println("Count = "+ht.count());
 //		System.out.println(ht.listWords());
 		
