@@ -65,7 +65,6 @@ public class HybridTestMain {
         
         HybridTrie convertTrie = (HybridTrie) newTrie.clone();
         
-        System.out.println(convertTrie.draw());
         
         PatriciaTrie pTrie = (PatriciaTrie) convertTrie.convert();
         
