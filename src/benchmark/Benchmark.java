@@ -2,13 +2,13 @@ package benchmark;
 
 import datastructures.BalancedHybridTrie;
 import datastructures.HybridTrie;
-import datastructures.HybridTrieOld;
 import datastructures.PatriciaTrie;
 import interfaces.ITrie;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
 
 /**
  * Created by kuoa on 11/26/16.
@@ -228,7 +228,7 @@ public class Benchmark {
             build(verbose);
         }
 
-        output.printf(formatDouble,"Total Time", totalTime);
+        output.printf(formatDouble, totalTime);
         output.close();
     }
 

@@ -61,7 +61,7 @@ public class BHybridTestMain {
         
         PatriciaTrie pTrie = (PatriciaTrie) convertTrie.convert();
         
-//        System.out.println(pTrie.draw());
+        System.out.println(pTrie.draw());
         
         System.out.println("Removing <professeur>");
         trie.remove("professeur");

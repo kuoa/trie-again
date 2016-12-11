@@ -32,7 +32,7 @@ public class HybridTestMain {
         }
         
         System.out.println("Visual representation");
-        System.out.println(trie.draw());
+//        System.out.println(trie.draw());
         
         System.out.println("The word <genial> present ? " + trie.lookup("genial"));
         System.out.println("The word <ALGAV> present ? " + trie.lookup("ALGAV"));
@@ -43,13 +43,25 @@ public class HybridTestMain {
         
         HybridTrie newTrie = new HybridTrie();
         
-        newTrie.insert("hey");
-        newTrie.insert("you");
-        newTrie.insert("how");
-        newTrie.insert("are");
-        newTrie.insert("yooou");
-        newTrie.insert("famous");
+//        newTrie.insert("hey");
+//        newTrie.insert("you");
+//        newTrie.insert("how");
+//        newTrie.insert("are");
+//        newTrie.insert("yooou");
+//        newTrie.insert("famous");
+//        newTrie.insert("flower");
+        
+        newTrie.insert("my");
+        newTrie.insert("mine");
+        newTrie.insert("mein");
+        newTrie.insert("mansion");
+        newTrie.insert("homeless");
+        newTrie.insert("home");
+        newTrie.insert("hit");
+        newTrie.insert("hi");        
+        newTrie.insert("foam");
         newTrie.insert("flower");
+        newTrie.insert("flow");
         
         HybridTrie convertTrie = (HybridTrie) newTrie.clone();
         
@@ -63,7 +75,7 @@ public class HybridTestMain {
         trie.remove("professeur");
         System.out.println("Removing <ALGAV>");
         trie.remove("ALGAV");
-        System.out.println(trie.draw());                                                      
+//        System.out.println(trie.draw());                                                      
 
     }
 }

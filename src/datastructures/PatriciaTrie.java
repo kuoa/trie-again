@@ -455,7 +455,7 @@ public class PatriciaTrie implements ITrie {
 				} else {
 					current = new Node(c);
 					cNode = current;
-					prev = current;					
+					prev = current;			
 					current = current.middle;
 				}				
 			}

@@ -1,6 +1,5 @@
 import datastructures.BalancedHybridTrie;
 import datastructures.HybridTrie;
-import datastructures.PatriciaTrie;
 
 
 public class TestMain {

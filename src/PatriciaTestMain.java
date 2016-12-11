@@ -1,5 +1,3 @@
-import datastructures.HybridTrie;
-import datastructures.HybridTrieOld;
 import datastructures.PatriciaTrie;
 
 /**
@@ -57,8 +55,6 @@ public class PatriciaTestMain {
         mergeTrie.insert("foam");
         mergeTrie.insert("flower");
         
-        PatriciaTrie convertTrie = mergeTrie.clone();
-        
         System.out.println(trie.draw());
         
         PatriciaTrie mergeWithTrie = new PatriciaTrie();
@@ -78,12 +74,6 @@ public class PatriciaTestMain {
         mergeTrie.merge(mergeWithTrie);
         
         System.out.println(mergeTrie.draw());
-        
-        System.out.println("Converting to hybrid tree");
-        
-        HybridTrie hybridTrie = convertTrie.convert();
-        
-        System.out.println(hybridTrie.draw());
         
         System.out.println("Removing <professeur>");
         trie.remove("professeur");
