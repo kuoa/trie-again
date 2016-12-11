@@ -419,11 +419,15 @@ public class PatriciaTrie implements ITrie {
 	public HybridTrie convert() {
 
 		HybridTrie hybridTrie = new HybridTrie();
+		
+		Node n = null;
 				
 		for (Entry<Character, Tuple<String, PatriciaTrie>> e : data.entrySet()) {
-			convertRecur(e.getValue(), hybridTrie, null);
-		}			
-
+			n = convertRecur(e.getValue(), n, null);
+		}	
+		
+		hybridTrie.root = n;
+		
 		return hybridTrie;
 	}
 	
@@ -434,25 +438,24 @@ public class PatriciaTrie implements ITrie {
 	 * @param pNode : previous Node of the Hybrid Tree used in case of a end word
 	 */
 
-	private void convertRecur(Tuple<String, PatriciaTrie> tuple, HybridTrie cNode, HybridTrie pNode) {
+	private Node convertRecur(Tuple<String, PatriciaTrie> tuple, Node cNode, Node pNode) {
 
-		HybridTrie current = cNode;		/* current Node being tracked */
-		HybridTrie prev = pNode;		/* previous Node beeing tracked */
+		Node current = cNode;		/* current Node being tracked */
+		Node prev = pNode;		/* previous Node beeing tracked */
 		String prefix = tuple.prefix;
 						
-		if (current.isNull()) {
+		if (current == null) {
 			/* empty node -> add to middle */		
 			
 			for (int i = 0; i < prefix.length(); i++) {
 				Character c = prefix.charAt(i);
 
 				if (c.equals(epsilon)) {					
-					prev.setEnd();					
+					prev.isEnd = true;					
 				} else {
-					prev = current;
-					
-					current.set(c);					
-					current.middle = new HybridTrie();					
+					current = new Node(c);
+					cNode = current;
+					prev = current;					
 					current = current.middle;
 				}				
 			}
@@ -460,19 +463,23 @@ public class PatriciaTrie implements ITrie {
 			PatriciaTrie child = tuple.child;
 			
 			if (child != null) {
+				current = prev;
 				for (Entry<Character, Tuple<String, PatriciaTrie>> e : child.data.entrySet()) {
-					convertRecur(e.getValue(), current, prev);
+					current = convertRecur(e.getValue(), cNode.middle, cNode);
 				}
-			}			
+			}
+			return current;
 		}		
 		else if(prefix.charAt(0) < cNode.letter){
 			/* left insertion */
-			convertRecur(tuple, cNode.left, prev);
+			cNode.left = convertRecur(tuple, cNode.left, prev);
+			return cNode;
 		}		
 		else{
 			/* right insertion */
-			convertRecur(tuple, cNode.right, prev);
-		}		
+			cNode.right = convertRecur(tuple, cNode.right, prev);
+			return cNode;
+		}
 	}
 
 	

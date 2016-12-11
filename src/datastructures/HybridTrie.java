@@ -1,350 +1,367 @@
 package datastructures;
 
-import interfaces.ITrie;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import interfaces.ITrie;
+
+class Node {
+	Node left, middle, right;
+	char letter;
+	int height;
+	boolean isEnd;
+	
+	public Node() {
+		
+	}
+	
+	public Node(char l) {
+		letter = l;
+		isEnd = false;
+		height = 1;
+	}	
+}
+
 public class HybridTrie implements ITrie {
 	
-	public HybridTrie left, right, middle;
-	public char letter;
+	protected Node root;
 	
-	private boolean isNull, isEnd;
+	private static int _did = 0;
+	private static int _nbLeaves = 0, _depthesSum = 0;
 	
-	private static int _did = 0; /* used for draw() */
-	private static int _depthsSum, _nbLeaves;
-	
-	private int height;
+	public PatriciaTrie convert_S(){
+		PatriciaTrie t = new PatriciaTrie();
 		
-	public HybridTrie() {
-		isNull = true;
-		isEnd = false;
-		height = 0;
+		for (String word : listWords()){
+			t.insert(word);
+		}
+		
+		return t;
+			
 	}
 	
-	public static HybridTrie nullHT() {
-		return new HybridTrie();
-	}
-	
-	public void set(char l) {
-		isNull = false;
-		letter = l;
-		height = 1;
-		left = nullHT();
-		middle = nullHT();
-		right = nullHT();
-	}
-	
-	public void nullify() {
-		isNull = true;
-		isEnd = false;
-		left = null;
-		right = null;
-		middle = null;
-	}
-
-	@Override	
+	@Override
 	public void insert(String word) {
-		if(word.isEmpty()) return;
-		
-		char l = word.charAt(0);
-		if(isNull) {
-			set(l);
-			if(word.length() == 1) isEnd = true;
-			middle.insert(word.substring(1));
-			return;
-		}
-		
-		if(l < letter) {
-			left.insert(word);
-		}
-		else if(l > letter) {
-			right.insert(word);
-		} else {
-			if(word.length() == 1) isEnd = true;
-			middle.insert(word.substring(1));
-		}
-				
-		
-	}
-	
-	public void balancedInsert(String word) {
-		if(word.isEmpty()) return;
-		
-		char l = word.charAt(0);
-		if(isNull) {
-			set(l);
-			if(word.length() == 1) isEnd = true;
-			middle.insert(word.substring(1));
-			return;
-		}
-		
-		if(l < letter) {
-			left.balancedInsert(word);
-		}
-		else if(l > letter) {
-			right.balancedInsert(word);
-		} else {
-			if(word.length() == 1) isEnd = true;
-			middle.balancedInsert(word.substring(1));
-		}
-		
-		height = 1+Math.max(left.height, right.height);
-		
-		right = balance(right);
-		left = balance(left);
-	}
-
-	private static HybridTrie balance(HybridTrie A) {
-		if(A.isNull) return A;
-		
-		if(A.left.height - A.right.height == 2) { /* need right rotation */
-			if(A.left.height < A.right.height) {
-				A.left = rotateLeft(A.left);
-			}
-			A = rotateRight(A);
-		} else if(A.left.height - A.right.height == -2) { /* need left rotation */
-			if(A.right.height < A.left.height) {
-				A.right = rotateRight(A.right);
-			}
-			A = rotateLeft(A);
-		}
-		
-		return A;		
-	}
-
-	private static HybridTrie rotateLeft(HybridTrie a) {
-		HybridTrie nv = a.right;
-		a.right = nv.left;
-		nv.left = a;
-		
-		/* update heights */
-		
-		
-		return nv;
-	}
-
-	private static HybridTrie rotateRight(HybridTrie a) {
-		HybridTrie nv = a.left;
-		a.left = nv.right;
-		nv.right = a;
-		
-		
-		
-		return nv;
+		root = _insert(root, word);
 	}
 
 	@Override
 	public void remove(String word) {
-		_remove(word);
+		root = _remove(root, word);
+
 	}
-	
-	private boolean rot() {
-		if(left.isNull && middle.isNull && right.isNull && !isEnd) {
-			nullify();
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	private boolean _remove(String word) { /* returns true if children was nullified */
-		if(isNull || word.isEmpty()) return false;
-		
-		char l = word.charAt(0);
-		
-		if(letter == l) {
-			if(isEnd && word.length() == 1) {
-				isEnd = false;
-				return rot();
-			}
-			if(middle._remove(word.substring(1))) {
-				return rot();
-			} return false;
-		} else if(l < letter) {
-			if(left._remove(word)) {
-				return rot();
-			} return false;
-		} else {
-			if(right._remove(word)) {
-				return rot();
-			} return false;
-		}
-	}
-//	return false;
 
 	@Override
 	public boolean lookup(String word) {
-		if(isNull || word.isEmpty()) return false;
-		
-		char l = word.charAt(0);
-		
-		if(letter == l) {
-			if(isEnd && word.length() == 1) return true;
-			return middle.lookup(word.substring(1));
-		} else if(l < letter) {
-			return left.lookup(word);
-		} else {
-			return right.lookup(word);
-		}
+		return _lookup(root, word);
 	}
 
 	@Override
 	public int count() {
-		if(isNull) return 0;
-		
-		return ((isEnd) ? 1 : 0) + left.count() + middle.count() + right.count();
+		return _count(root);
 	}
 
 	@Override
 	public List<String> listWords() {
-		List<String> lw = new ArrayList<>();
-		
-		_listWords(lw, "");
-		
-		return lw;
-	}
-	
-	private void _listWords(List<String> lw, String cur) {
-		if(isNull) return;
-		
-		if(isEnd) {
-			lw.add(cur+letter);
-		}
-		
-		left._listWords(lw, cur);
-		middle._listWords(lw, cur+letter);
-		right._listWords(lw, cur);
+		List<String> ret = new ArrayList<>();
+		_listWords(root, ret, "");
+		return ret;
 	}
 
 	@Override
 	public int nbNullPointer() {
-		return (isNull ? 1 : (left.nbNullPointer()+middle.nbNullPointer()+right.nbNullPointer()));
+		return _nbNullPointer(root);
 	}
 
 	@Override
 	public int height() {
-		if(isNull) return 0;
-		
-		return 1+Math.max(Math.max(left.height(), right.height()), middle.height());
+		return _height(root);
 	}
 
 	@Override
 	public int avgDepth() {
-		_depthsSum = 0;
-		_nbLeaves  = 0;
-		_avgDepth(0);
+		if(root == null) return 0;
 		
-		return _depthsSum / _nbLeaves;
-	}
-	
-	private void _avgDepth(int dep) {
-		if(isNull) {
-			_depthsSum += dep;
-			_nbLeaves++;
-			return;
-		} 
+		_nbLeaves = 0;
+		_depthesSum = 0;
 		
-		left._avgDepth(dep+1);
-		middle._avgDepth(dep+1);
-		right._avgDepth(dep+1);	
+		_avgDepth(root,0);
+		
+		return _depthesSum / _nbLeaves;
 	}
 
 	@Override
 	public int nbPrefixed(String pref) {
-		if(isNull) return 0;
-		
-		if(pref.isEmpty()) return count();
-		
-		char l = pref.charAt(0);
-		
-		if(letter == l) {
-			return middle.nbPrefixed(pref.substring(1));
-		} else if(l < letter) {
-			return left.nbPrefixed(pref);
-		} else {
-			return right.nbPrefixed(pref);
-		}
+		return _nbPrefixed(root, pref);
 	}
 
 	@Override
 	public ITrie convert() {
 		PatriciaTrie pt = new PatriciaTrie();
-		for(String w : listWords()) {
-			pt.insert(w);
-		}
+		
+		_convert("", pt, root);
+		
 		return pt;
 	}
 
 	@Override
-	public HybridTrie clone() {
-		if(isNull) return nullHT();
-
-		HybridTrie nt = new HybridTrie();
-		nt.isEnd = isEnd;
-		nt.isNull = isNull;
-		nt.letter = letter;
-
-		nt.left = left.clone();
-		nt.middle = middle.clone();
-		nt.right = right.clone();
-
-		return nt;
+	public ITrie clone() {
+		HybridTrie ht = new HybridTrie();
+		ht.root = _clone(root);
+		return ht;
 	}
 
 	@Override
 	public String draw() {
 		StringBuilder sb = new StringBuilder("digraph T {\n");
-		_draw(sb, 0);
-		sb.append("}");
+		_did = 0;
+		_draw(root, sb, 0);
 		
-		return sb.toString();
+		return sb.append("\n}").toString();
 	}
 	
-	private void _draw(StringBuilder sb, int father) {
+	private static void _draw(Node root, StringBuilder sb, Integer father) {
 		String fath = Integer.toString(father);
 		Integer me = _did++;
 		
-		if(isNull) {			
+		if(root == null) {
 			sb.append(me + "[shape=point]\n");
 			sb.append(fath +" -> "+ me +"\n");
 			return;
 		}
 		
-		sb.append(me + " [label=\""+letter+" ["+height+"]\""+
-				((isEnd) ? ",shape=square" : ",shape=circle")
+		sb.append(me + " [label=\""+root.letter+" ["+root.height+"]\""+
+				((root.isEnd) ? ",shape=square,style=filled,color=lightgreen" : ",shape=circle")
 				+"]\n");
 		sb.append(father + " -> " + me + "\n");
 		
-		left._draw(sb, me);
-		middle._draw(sb, me);
-		right._draw(sb, me);
+		_draw(root.left, sb, me);
+		_draw(root.middle, sb, me);
+		_draw(root.right, sb, me);
+	}
+	
+	private static Node _insert(Node root, String word) {
+		if(word.isEmpty()) return root;
 		
-	}
-	
-	public String toString() {
-		return _toString("| ");
-	}
-	
-	private String _toString(String blk) {
-		if(isNull) {
-			return "<>";
-		} else {
-			return "["+letter+"]\n"+blk+left._toString(blk+"| ")+"\n"+blk+middle._toString(blk+"| ")+"\n"+blk+right._toString(blk+"| ")+")";
+		char l = word.charAt(0);
+		if(root == null) {
+			Node n = new Node(l);
+			if(word.length() == 1) 
+				n.isEnd = true;
+			n.middle = _insert(n.middle, word.substring(1));
+			return n;
 		}
-	}
-	
-	public void setEnd() {
-		isEnd = true;
-	}
-	
-	public boolean isNull() {
-		return isNull;
-	}
-	
-	public boolean isEnd() {
-		return isEnd;
+		
+		char letter = root.letter;
+		if(l < letter) {
+			root.left = _insert(root.left, word);
+		}
+		else if(l > letter) {
+			root.right = _insert(root.right, word);
+		} else {
+			if(word.length() == 1) 
+				root.isEnd = true;
+			root.middle = _insert(root.middle, word.substring(1));
+		}
+		
+		return root;
 	}
 
+	private static Node _remove(Node root, String word) {
+		if(root == null || word.isEmpty()) return null;
+		
+		char l = word.charAt(0), letter = root.letter;
+		
+		if(letter == l) {
+			if(root.isEnd && word.length() == 1) {
+				root.isEnd = false;
+				return rot(root);
+			}
+			root.middle = _remove(root.middle, word.substring(1));
+		} else if(l < letter) {
+			root.left = _remove(root.left, word);
+		} else {
+			root.right = _remove(root.right, word);
+		}
+		return root;
+	}
+	
+	private static Node rot(Node root) {
+		if(root == null) return null;
+		
+		if(root.left == null && root.right == null && root.middle == null && !root.isEnd) return null;
+		return root;
+	}
+
+	private static boolean _lookup(Node root, String word) {
+		if(root == null || word.isEmpty()) return false;
+		
+		char l = word.charAt(0), letter = root.letter;
+		
+		if(letter == l) {
+			if(root.isEnd && word.length() == 1) return true;
+			return _lookup(root.middle, word.substring(1));
+		} else if(l < letter) {
+			return _lookup(root.left, word);
+		} else {
+			return _lookup(root.right, word);
+		}
+	}
+
+	private static int _count(Node root) {
+		if(root == null) return 0;
+		
+		return ((root.isEnd) ? 1 : 0) + _count(root.left) + _count(root.middle) + _count(root.right);
+	}
+
+	private static void _listWords(Node root, List<String> ret, String pref) {
+		if(root == null) return;
+		
+		if(root.isEnd) {
+			ret.add(pref+root.letter);
+		}
+		
+		_listWords(root.left, ret, pref);
+		_listWords(root.middle, ret, pref+root.letter);
+		_listWords(root.right, ret, pref);
+	}
+
+	private static int _nbNullPointer(Node root) {
+		if(root == null) return 1;
+		return _nbNullPointer(root.left)+_nbNullPointer(root.middle)+_nbNullPointer(root.right);
+	}
+
+	private static int _height(Node root) {
+		if(root == null) return 0;
+		return 1+Math.max(_height(root.left),Math.max(_height(root.middle),_height(root.right)));
+	}
+	
+	private static void _avgDepth(Node root, int prof) {
+		if(root == null) return;
+		if(root.left == null && root.middle == null && root.right == null) {
+			_nbLeaves++;
+			_depthesSum += prof;
+			return;
+		}
+		
+		_avgDepth(root.left, prof+1);
+		_avgDepth(root.middle, prof+1);
+		_avgDepth(root.right, prof+1);
+	}
+
+	private static int _nbPrefixed(Node root, String pref) {
+		if(root == null) return 0;
+		
+		if(pref.isEmpty()) return _count(root);
+		
+		char l = pref.charAt(0), letter = root.letter;
+		
+		if(letter == l) {
+			return _nbPrefixed(root.middle, pref.substring(1));
+		} else if(l < letter) {
+			return _nbPrefixed(root.left, pref);
+		} else {
+			return _nbPrefixed(root.right, pref);
+		}
+	}
+
+	protected static Node _clone(Node root) {
+		if(root == null) return null;
+		Node n = new Node(root.letter);
+		n.isEnd = root.isEnd;
+		n.height = root.height;
+		
+		n.left = _clone(root.left);
+		n.middle = _clone(root.middle);
+		n.right = _clone(root.right);
+		
+		return n;
+	}
+	
+	
+	
+	private static void _convert(String word, PatriciaTrie pat, Node node){
+		
+		if(node == null){
+			return;
+		}
+		
+		String newWord = word + node.letter;
+		
+		/* word found */
+		if(node.isEnd){
+
+			/* no child so append epsilon */
+			if(node.middle == null){				
+				pat.insert(newWord + PatriciaTrie.epsilon);				
+			}
+			else{
+				/* insert word */
+				pat.insert(newWord);
+												
+				Tuple<String, PatriciaTrie> currentTuple = 
+						pat.data.get(newWord.charAt(0));						
+				
+				/* son */
+				if(currentTuple.child == null){
+					currentTuple.child = new PatriciaTrie();
+				}
+												
+				/* epsilon */
+				currentTuple.child.data.put(PatriciaTrie.epsilon,
+						new Tuple<String, PatriciaTrie>(PatriciaTrie.epsilon.toString(), null));
+
+				_convert("", currentTuple.child, node.middle);				
+			}											
+		}
+		else{
+			_convert(newWord, pat, node.middle);
+		}
+		
+		_convert(word, pat, node.left);
+		_convert(word,pat, node.right);		
+				
+	}
 }
+
+/*
+public static void convert(Node root, PatriciaTrie pt) {
+	if(root == null) return;
+	
+	String pref = "";
+	Node ptr = root;
+	Hashtable<Character, Tuple<String, PatriciaTrie>> hash = pt.data;
+	
+	do {
+		pref += ptr.letter;
+		ptr = ptr.middle;
+	} while(ptr != null && ptr.left == null && ptr.right == null && !ptr.isEnd);
+	
+//	System.out.println(pref);
+	
+	if(ptr != null && ptr.isEnd) {
+		pref += PatriciaTrie.epsilon;
+//		ptr = ptr.middle;
+		
+
+//		if(ptr.left == null && ptr.middle == null && ptr.right == null) {
+//			
+//		} else {
+//	
+//		}
+	}
+	
+	PatriciaTrie np = new PatriciaTrie();
+	
+	convert(ptr, np);
+	hash.put(pref.charAt(0), new Tuple<>(pref, np));
+	
+	
+	if(root.left != null) {
+		convert(root.left, pt);
+	}
+	if(root.right != null) {
+		convert(root.right, pt);
+	}
+}
+*/

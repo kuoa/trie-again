@@ -1,13 +1,6 @@
+import datastructures.BalancedHybridTrie;
 import datastructures.HybridTrie;
-import datastructures.PHybridTrie;
 import datastructures.PatriciaTrie;
-import interfaces.ITrie;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 
 public class TestMain {
@@ -15,29 +8,30 @@ public class TestMain {
 
 		
 		
-		final String[] words2 = new String[]{
-                "A", "quel", "genial", "professeur", "de", "dactylographie", "sommes", "nous", "redevables", "de",
-                "la", "superbe", "phrase", "ci", "dessus", ",", "un", "modele", "du", "genre", ",", "que", "toute",
-                "dactylo", "connait", "par", "coeur", "puisque", "elle", "fait", "appel", "a", "chaqune", "des",
-                "touches", "du", "clavier", "de", "la", "machine", "a", "ecrire", "?" };
-		final String[] words = new String[]{
-				"caca", "boudin", "sucette", "bukake", "procrastination", "sexe", "boulot", "prog",
-				"manette", "hésitation", "zombie", "cacahuète"
-		};
-		final String[] words3 = new String[]{
-				"aaa", "bbb", "ccc", "ddd", "eee", "fff", "ggg", "hhh", "iii"
-		};
-		final String[] words4 = new String[]{
-				"at", "atom"
-		};
+//		final String[] words = new String[]{
+//                "A", "quel", "genial", "professeur", "de", "dactylographie", "sommes", "nous", "redevables", "de",
+//                "la", "superbe", "phrase", "ci", "dessus", ",", "un", "modele", "du", "genre", ",", "que", "toute",
+//                "dactylo", "connait", "par", "coeur", "puisque", "elle", "fait", "appel", "a", "chaqune", "des",
+//                "touches", "du", "clavier", "de", "la", "machine", "a", "ecrire", "?" };
+		
+		String str = "bonjour je suis un texte exemple et je contiens un paquet "
+				+ "de mots juste pour remplir ce tableau avec nimporte quoi meme"
+				+ " si cela na aucun sens et en plus cette phrase ne se termine"
+				+ " jamais oh mon dieu cest vraiment incroyable a quel point"
+				+ "ca ne fini pas a ce quil parait cette phrase peut atteindre"
+				+ " les mille caracteres";
+		String[] words = str.split(" ");
 		
 //		
-		PHybridTrie ht = new PHybridTrie();
-		for(String w : words2) {
+		HybridTrie ht = new BalancedHybridTrie();
+		for(String w : words) {
 			ht.insert(w);
-		}
+		}		
 		
-		PatriciaTrie pt = (PatriciaTrie)ht.convert();
+//		PatriciaTrie pt = (PatriciaTrie)ht.convert();
+//		PatriciaTrie pt2 = ht.convert_S();
+//		System.out.println("pat " + pt2.count());
+//		System.out.println("Pt = "+pt.listWords().size()+"\nHt = "+ht.listWords().size());
 		
 //		System.out.println(ht);
 		
@@ -52,7 +46,7 @@ public class TestMain {
 //		}
 //		System.out.println(ht.middle.middle.right.middle.middle.letter);
 		
-		System.out.println(pt.draw());
+		System.out.println(ht.draw());
 //		System.out.println("Count = "+ht.count());
 //		System.out.println(ht.listWords());
 		

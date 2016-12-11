@@ -1,6 +1,7 @@
 package benchmark;
 
 import benchmark.Benchmark;
+import datastructures.BalancedHybridTrie;
 import datastructures.HybridTrie;
 import datastructures.PatriciaTrie;
 
@@ -21,6 +22,11 @@ public class BenchmarkEachTrie {
         HybridTrie hybridTrie = new HybridTrie();
         benchmark.initialize(hybridTrie);
         benchmark.setOutput("eachHybrid.out");
+        benchmark.buildEachTrie(false);
+        
+        BalancedHybridTrie bhybridTrie = new BalancedHybridTrie();
+        benchmark.initialize(bhybridTrie);
+        benchmark.setOutput("eachBalancedHybrid.out");
         benchmark.buildEachTrie(false);
     }
 }

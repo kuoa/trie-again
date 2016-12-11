@@ -1,4 +1,5 @@
 import datastructures.HybridTrie;
+import datastructures.HybridTrieOld;
 import datastructures.PatriciaTrie;
 
 import java.util.List;

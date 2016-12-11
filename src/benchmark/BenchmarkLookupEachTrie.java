@@ -5,10 +5,8 @@ import datastructures.BalancedHybridTrie;
 import datastructures.HybridTrie;
 import datastructures.PatriciaTrie;
 
-/**
- * Created by kuoa on 11/26/16.
- */
-public class BenchmarkRemoveEachTrie {
+
+public class BenchmarkLookupEachTrie {
 
     public static void main(String[] args){
 
@@ -16,17 +14,17 @@ public class BenchmarkRemoveEachTrie {
 
         PatriciaTrie patriciaTrie = new PatriciaTrie();
         benchmark.initialize(patriciaTrie);
-        benchmark.setOutput("removeEachPatricia.out");
-        benchmark.removeFromEachTrie(false);
+        benchmark.setOutput("lookupEachPatricia.out");
+        benchmark.lookupFromEachTrie(false);
 
         HybridTrie hybridTrie = new HybridTrie();
         benchmark.initialize(hybridTrie);
-        benchmark.setOutput("removeEachHybrid.out");
-        benchmark.removeFromEachTrie(false);
+        benchmark.setOutput("lookupEachHybrid.out");
+        benchmark.lookupFromEachTrie(false);
         
         BalancedHybridTrie bhybridTrie = new BalancedHybridTrie();
         benchmark.initialize(bhybridTrie);
-        benchmark.setOutput("removeEachBalanced.out");
-        benchmark.removeFromEachTrie(false);
+        benchmark.setOutput("lookupEachBalanced.out");
+        benchmark.lookupFromEachTrie(false);
     }
 }
