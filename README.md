@@ -1,4 +1,4 @@
-# Comparative case study of Patricia Tries and Hybrid_Tries
+# Comparative case study of Patricia Tries and Hybrid Tries
 
 In  this  case  study  we  will  be  comparing  the  performances  of  two  Trie  datastructures : *Patricia  Tries*,  and  *Hybrid  Tries*  (also  known  as  Ternary  SearchTries).
 
